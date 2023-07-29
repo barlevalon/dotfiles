@@ -6,7 +6,7 @@ return {
         "hcl",
         "terraform",
         "bash",
-        "help",
+        "vimdoc",
         "html",
         "javascript",
         "json",
