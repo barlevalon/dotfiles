@@ -1,6 +1,6 @@
 # Services
-hyper - z : brew services restart yabai
-hyper - x : brew services restart skhd
+hyper - z : yabai --restart-service
+hyper - x : skhd --restart-service
 
 # open terminal, blazingly fast compared to iTerm/Hyper
 cmd - return : "/Applications/Kitty.app/Contents/MacOS/kitty" --single-instance -d ~
@@ -49,6 +49,9 @@ shift + cmd - n : yabai -m space --create && \
                   index="$(yabai -m query --spaces --display | jq 'map(select(."is-native-fullscreen" == false))[-1].index')" && \
                   yabai -m window --space "${index}" && \
                   yabai -m space --focus "${index}"
+
+# Delete focused space and focus first space on display
+hyper - d : yabai -m space --destroy
 
 # fast focus desktop
 cmd + alt - x : yabai -m space --focus recent
