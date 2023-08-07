@@ -54,6 +54,8 @@ shift + cmd - n : yabai -m space --create && \
 hyper - d : yabai -m space --destroy
 
 # fast focus desktop
+ctrl - right : yabai -m space --focus next
+ctrl - left : yabai -m space --focus prev
 cmd + alt - x : yabai -m space --focus recent
 cmd + alt - 1 : yabai -m space --focus 1
 cmd + alt - 2 : yabai -m space --focus 2
