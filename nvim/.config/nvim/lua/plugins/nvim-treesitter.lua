@@ -1,8 +1,8 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
+    opts = function (_, opts)
+      vim.list_extend(opts.ensure_installed, {
         "hcl",
         "terraform",
         "bash",
@@ -20,7 +20,10 @@ return {
         "typescript",
         "vim",
         "yaml",
-      },
-    },
+        "ron",
+        "rust",
+        "toml"
+      })
+    end,
   },
 }
