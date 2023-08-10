@@ -1,0 +1,13 @@
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+[commit]
+	gpgsign = true
+[user]
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN1kjySs8SndASeQdQlGLrhqb6XzPOBwi88tIaU58EOP
+	email = alon.hearter@gmail.com
+[pull]
+	rebase = true
+[rebase]
+	autoStash = true
