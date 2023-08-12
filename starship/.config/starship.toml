@@ -25,6 +25,7 @@ symbol = "☁️ "
 format = '\[[$symbol($profile)($region)(\[$duration\])]($style)\]'
 
 [aws.region_aliases]
+il-central-1 = "tel aviv"
 eu-west-1 = "ireland"
 eu-central-1 = "frankfurt"
 eu-west-2 = "london"
