@@ -4,8 +4,8 @@ font_family FiraCode Nerd Font
 italic_font SFMono Nerd Font Regular Italic
 font_size 17
 
-map f12 combine : kitten themes Tokyo Night Day : load_config_file
-map cmd+f12 combine : kitten themes Tokyo Night Storm : load_config_file
+map f12 combine : kitten themes Catppuccin-Latte : load_config_file
+map cmd+f12 combine : kitten themes Catppuccin-Macchiato : load_config_file
 
 map kitty_mod+w no_op
 map kitty_mod+t no_op
@@ -2296,6 +2296,6 @@ term xterm-256color
 
 
 # BEGIN_KITTY_THEME
-# Tokyo Night Storm
+# Catppuccin-Latte
 include current-theme.conf
 # END_KITTY_THEME
