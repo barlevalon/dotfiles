@@ -3,7 +3,7 @@ hyper - z : yabai --restart-service
 hyper - x : skhd --restart-service
 
 # open terminal, blazingly fast compared to iTerm/Hyper
-cmd - return : "/Applications/Kitty.app/Contents/MacOS/kitty" --single-instance -d ~
+# cmd - return : "/Applications/Kitty.app/Contents/MacOS/kitty" --single-instance -d ~
 
 alt - t : open -a "/Applications/kitty.app/Contents/MacOS/kitty"
 alt - n : open -a "/Applications/Logseq.app/Contents/MacOS/Logseq"
