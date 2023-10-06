@@ -1,4 +1,5 @@
 set fish_greeting
+set -gx SHELL /opt/homebrew/bin/fish
 set -Ux XDG_CONFIG_HOME $HOME/.config
 source $XDG_CONFIG_HOME/fish/themes/fish_tokyonight_storm.fish
 set -gx HOMEBREW_PREFIX "/opt/homebrew";
