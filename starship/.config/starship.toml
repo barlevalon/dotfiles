@@ -8,6 +8,7 @@ $git_metrics\
 $git_status\
 $docker_context\
 $package\
+$terraform\
 $aws\
 $kubernetes\
 $cmd_duration\
@@ -24,16 +25,16 @@ palette = "catppuccin_macchiato"
 symbol = "☁️ "
 format = '\[[$symbol($profile)($region)(\[$duration\])]($style)\]'
 
-[aws.region_aliases]
-il-central-1 = "tel aviv"
-eu-west-1 = "ireland"
-eu-central-1 = "frankfurt"
-eu-west-2 = "london"
-eu-north-1 = "stockholm"
-us-east-1 = "n. virginia"
-us-east-2 = "ohio"
-us-west-1 = "n. california"
-us-west-2 = "oregon"
+# [aws.region_aliases]
+# il-central-1 = "tel aviv"
+# eu-west-1 = "ireland"
+# eu-central-1 = "frankfurt"
+# eu-west-2 = "london"
+# eu-north-1 = "stockholm"
+# us-east-1 = "n. virginia"
+# us-east-2 = "ohio"
+# us-west-1 = "n. california"
+# us-west-2 = "oregon"
 
 [c]
 format = '\[[$symbol($version(-$name))]($style)\]'
