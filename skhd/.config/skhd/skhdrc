@@ -9,6 +9,7 @@ alt - t : open -a "/Applications/kitty.app/Contents/MacOS/kitty"
 alt - n : open -a "/Applications/Logseq.app/Contents/MacOS/Logseq"
 alt - b : open -a "/Applications/Arc.app/Contents/MacOS/Arc"
 alt - c : open -a "/System/Applications/Calendar.app/Contents/MacOS/Calendar"
+alt + shift - c: obs --startvirtualcam --minimize-to-tray
 
 # focus window
 alt - h : yabai -m window --focus west
