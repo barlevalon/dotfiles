@@ -22,6 +22,6 @@ function u
   gum spin --spinner globe --title "🧰 mason.nvim updating" -- nvim --headless "+MasonUpdate" +qa
   echo "✅ 🧰 mason.nvim updated"
 
-  gum spin --show-output --spinner globe --title "🍻 brew upgrading" -- brew update && brew upgrade && brew upgrade --cask --greedy-latest
+  gum spin --show-output --spinner globe --title "🍻 brew upgrading" -- begin; brew update && brew upgrade && brew upgrade --cask --greedy-latest; end
   echo "✅ 🍻 brew upgraded"
 end
