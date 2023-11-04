@@ -9,7 +9,7 @@ alt - t : open -a wezterm
 alt - n : open -a "/Applications/Logseq.app/Contents/MacOS/Logseq"
 alt - b : open -a "/Applications/Arc.app/Contents/MacOS/Arc"
 alt - c : open -a "/System/Applications/Calendar.app/Contents/MacOS/Calendar"
-alt + shift - c: obs --startvirtualcam --minimize-to-tray
+alt + shift - c: obs --args --startvirtualcam
 
 # focus window
 alt - h : yabai -m window --focus west
