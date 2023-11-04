@@ -5,7 +5,7 @@ hyper - x : skhd --restart-service
 # open terminal, blazingly fast compared to iTerm/Hyper
 # cmd - return : "/Applications/Kitty.app/Contents/MacOS/kitty" --single-instance -d ~
 
-alt - t : open -a "/Applications/kitty.app/Contents/MacOS/kitty"
+alt - t : open -a wezterm
 alt - n : open -a "/Applications/Logseq.app/Contents/MacOS/Logseq"
 alt - b : open -a "/Applications/Arc.app/Contents/MacOS/Arc"
 alt - c : open -a "/System/Applications/Calendar.app/Contents/MacOS/Calendar"
