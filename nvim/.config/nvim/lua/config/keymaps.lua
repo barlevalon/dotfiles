@@ -10,3 +10,6 @@ vim.keymap.set("n", "<leader>k", "<cmd>m .-2<cr>==", { desc = "Move up" })
 vim.keymap.set("v", "<leader>j", ":m '>+1<cr>gv=gv", { desc = "Move down" })
 vim.keymap.set("v", "<leader>k", ":m '<-2<cr>gv=gv", { desc = "Move up" })
 vim.keymap.set("n", "<A-\\>", ":silent !tmux neww tmux-sessionizer<CR>", { silent=true, desc = "tmux session" })
+
+vim.keymap.set("n", "<Tab>", ":bn<CR>", { desc = "Next buffer" })
+vim.keymap.set("n", "<S-Tab>", ":bp<CR>", { desc = "Prev buffer" })
