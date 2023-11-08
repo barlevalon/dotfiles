@@ -26,7 +26,7 @@ function u
   gum spin --spinner globe --title "💤 lazy.nvim syncing..." -- nvim --headless "+Lazy! sync" +qa
   echo "✅ 💤 lazy.nvim synced"
 
-  gum spin --spinner globe --title "🧰 mason.nvim updating" -- nvim --headless "+MasonUpdate" +qa
+  gum spin --spinner globe --title "🧰 mason.nvim updating" -- nvim --headless "+Lazy! load mason.nvim" "+MasonUpdate" +qa
   echo "✅ 🧰 mason.nvim updated"
 
   gum spin --spinner globe --title "🍻 brew updating" --show-output -- brew update >>/tmp/u-$NOW.txt
