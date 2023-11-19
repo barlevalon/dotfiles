@@ -13,8 +13,8 @@ keymap.set("v", "<leader>j", ":m '>+1<cr>gv=gv", { desc = "Move down" })
 keymap.set("v", "<leader>k", ":m '<-2<cr>gv=gv", { desc = "Move up" })
 keymap.set("n", "<A-\\>", ":silent !tmux neww tmux-sessionizer<CR>", { silent=true, desc = "tmux session" })
 
-keymap.set("n", "<Tab>", ":bn<CR>", { desc = "Next buffer" })
-keymap.set("n", "<S-Tab>", ":bp<CR>", { desc = "Prev buffer" })
+keymap.set("n", "<Tab>", ":bn<CR>", { desc = "Next buffer", silent=true })
+keymap.set("n", "<S-Tab>", ":bp<CR>", { desc = "Prev buffer", silent=true })
 
 -- Increment/decrement
 keymap.set("n", "+", "<C-a>", { desc = "Increment number under cursor" })
