@@ -2,13 +2,13 @@
 
 # You can use it to add commands that run after login to macOS user session.
 # 'start-at-login' needs to be 'true' for 'after-login-command' to work
-# For the list of available commands see: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md
+# For the tiles of available commands see: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md
 after-login-command = []
 
 # You can use it to add commands that run after AeroSpace startup.
 # 'after-startup-command' is run after 'after-login-command'
-# For the list of available commands see: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md
-after-startup-command = ['workspace 0', 'move-workspace-to-display next', 'workspace 1', 'move-workspace-to-display next']
+# For the tiles of available commands see: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md
+after-startup-command = []
 
 # Visual indent makes it easier to understand that containers of the same orientation are nested.
 # If you have 'auto-opposite-orientation-for-nested-containers' enabled then there is no way to observe the indent
@@ -25,13 +25,29 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 # The 'accordion-padding' specifies the size of the padding. You can set 0 to disable the padding feature
 accordion-padding = 30
 
-# Possible values: list|accordion
-default-root-container-layout = 'list'
+# Layout of root containers of non-empty workspaces. The layout is applied only on startup
+# Possible values: smart|tiles|accordion
+# - 'tiles' and 'accordion' are self-describing
+# - 'smart' means some "smart logic". Currently, 3 and less windows will get 'tiles' layout,
+#   4 and more will get 'accordion' layout. 'smart' can change its behavior in future versions
+non-empty-workspaces-root-containers-layout-on-startup = 'smart'
+
+# Possible values: tiles|accordion
+default-root-container-layout = 'tiles'
 
 # Possible values: horizontal|vertical|auto
 # 'auto' means: wide display (anything wider than high) gets horizontal orientation,
 #               tall display (anything higher than wide) gets vertical orientation
 default-root-container-orientation = 'auto'
+
+# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#assign-workspaces-to-monitors
+# [workspace-to-monitor-force-assignment]
+[workspace-to-monitor-force-assignment]
+0 = 'secondary'
+1 = 'main'
+2 = 'main'
+3 = 'main'
+4 = 'main'
 
 # It's a declaration of 'main' binding mode. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
 # 'main' binding mode must be always presented
@@ -49,7 +65,7 @@ alt-c = 'exec-and-forget open -a /System/Applications/Calendar.app/Contents/MacO
 alt-shift-c = 'exec-and-forget open -a /Applications/OBS.app/Contents/MacOS/OBS --args --startvirtualcam'
 
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#layout
-alt-slash = 'layout list horizontal vertical'
+alt-slash = 'layout tiles horizontal vertical'
 alt-comma = 'layout accordion horizontal vertical'
 
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#focus
@@ -78,11 +94,11 @@ alt-1 = 'workspace 1'
 alt-2 = 'workspace 2'
 alt-3 = 'workspace 3'
 alt-4 = 'workspace 4'
-alt-5 = 'workspace 5'
-alt-6 = 'workspace 6'
-alt-7 = 'workspace 7'
-alt-8 = 'workspace 8'
-alt-9 = 'workspace 9'
+# alt-5 = 'workspace 5'
+# alt-6 = 'workspace 6'
+# alt-7 = 'workspace 7'
+# alt-8 = 'workspace 8'
+# alt-9 = 'workspace 9'
 # alt-a = 'workspace A'
 # alt-b = 'workspace B'
 # alt-c = 'workspace C'
@@ -112,11 +128,11 @@ alt-shift-1 = 'move-node-to-workspace 1'
 alt-shift-2 = 'move-node-to-workspace 2'
 alt-shift-3 = 'move-node-to-workspace 3'
 alt-shift-4 = 'move-node-to-workspace 4'
-alt-shift-5 = 'move-node-to-workspace 5'
-alt-shift-6 = 'move-node-to-workspace 6'
-alt-shift-7 = 'move-node-to-workspace 7'
-alt-shift-8 = 'move-node-to-workspace 8'
-alt-shift-9 = 'move-node-to-workspace 9'
+# alt-shift-5 = 'move-node-to-workspace 5'
+# alt-shift-6 = 'move-node-to-workspace 6'
+# alt-shift-7 = 'move-node-to-workspace 7'
+# alt-shift-8 = 'move-node-to-workspace 8'
+# alt-shift-9 = 'move-node-to-workspace 9'
 # alt-shift-a = 'move-node-to-workspace A'
 # alt-shift-b = 'move-node-to-workspace B'
 # alt-shift-c = 'move-node-to-workspace C'
@@ -165,5 +181,5 @@ alt-shift-h = ['join-with left', 'mode main']
 alt-shift-j = ['join-with down', 'mode main']
 alt-shift-k = ['join-with up', 'mode main']
 alt-shift-l = ['join-with right', 'mode main']
-esc = 'mode main'
+esc = ['reload-config', 'mode main']
 enter = 'mode main'
