@@ -1,10 +1,12 @@
 local wezterm = require 'wezterm';
 
 local function scheme_for_appearance(appearance)
+  if true then return "Catppuccin Macchiato" end
+  -- TODO: Some day we'll have automatic dark/light mode switching
   if appearance:find "Dark" then
-    return "Catppuccin Mocha"
+    return "Catppuccin Macchiato"
   else
-    return "Catppuccin Mocha"
+    return "Catppuccin Latte"
   end
 end
 
@@ -20,7 +22,7 @@ end
 -- This is where you actually apply your config choices
 
 -- For example, changing the color scheme:
-config.font_size = 17
+config.font_size = 18
 config.color_scheme = scheme_for_appearance(wezterm.gui.get_appearance())
 
 config.hide_tab_bar_if_only_one_tab = true
