@@ -5,12 +5,19 @@ local function augroup(name)
   return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })
 end
 
-
 -- Fix conceallevel for json files
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = {"json", "jsonc"},
+  pattern = { "json", "jsonc" },
   callback = function()
     vim.wo.spell = false
     vim.wo.conceallevel = 0
-  end
+  end,
+})
+
+-- Disable autoformat for markdown files
+vim.api.nvim_create_autocmd({ "FileType" }, {
+  pattern = { "md" },
+  callback = function()
+    vim.b.autoformat = false
+  end,
 })
