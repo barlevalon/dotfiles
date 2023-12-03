@@ -1,13 +1,15 @@
-local wezterm = require 'wezterm';
+local wezterm = require("wezterm")
 
 local function scheme_for_appearance(appearance)
-  if true then return "Catppuccin Macchiato" end
-  -- TODO: Some day we'll have automatic dark/light mode switching
-  if appearance:find "Dark" then
-    return "Catppuccin Macchiato"
-  else
-    return "Catppuccin Latte"
-  end
+	-- if true then
+	-- 	return "Catppuccin Macchiato"
+	-- end
+	-- TODO: Some day we'll have automatic dark/light mode switching
+	if appearance:find("Dark") then
+		return "Catppuccin Macchiato"
+	else
+		return "Catppuccin Latte"
+	end
 end
 
 -- This table will hold the configuration.
@@ -16,7 +18,7 @@ local config = {}
 -- In newer versions of wezterm, use the config_builder which will
 -- help provide clearer error messages
 if wezterm.config_builder then
-  config = wezterm.config_builder()
+	config = wezterm.config_builder()
 end
 
 -- This is where you actually apply your config choices
@@ -31,6 +33,7 @@ config.window_decorations = "RESIZE"
 config.window_background_opacity = 0.8
 config.macos_window_background_blur = 20
 
+config.default_cursor_style = "BlinkingBar"
+
 -- and finally, return the configuration to wezterm
 return config
-

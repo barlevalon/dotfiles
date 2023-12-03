@@ -7,6 +7,10 @@ return {
     opts = {
       transparent_background = true,
       flavour = "Macchiato",
+      background = {
+        light = "latte",
+        dark = "mocha",
+      },
     },
   },
   {
