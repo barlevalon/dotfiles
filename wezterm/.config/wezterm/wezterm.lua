@@ -4,7 +4,6 @@ local function scheme_for_appearance(appearance)
 	-- if true then
 	-- 	return "Catppuccin Macchiato"
 	-- end
-	-- TODO: Some day we'll have automatic dark/light mode switching
 	if appearance:find("Dark") then
 		return "Catppuccin Macchiato"
 	else
