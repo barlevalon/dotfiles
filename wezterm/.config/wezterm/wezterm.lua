@@ -29,10 +29,14 @@ config.color_scheme = scheme_for_appearance(wezterm.gui.get_appearance())
 config.hide_tab_bar_if_only_one_tab = true
 config.window_decorations = "RESIZE"
 
-config.window_background_opacity = 0.8
+config.window_background_opacity = 0.95
 config.macos_window_background_blur = 20
 
 config.default_cursor_style = "BlinkingBar"
 
+config.disable_default_key_bindings = true
+config.keys = {
+	{ key = "L", mods = "CTRL|ALT", action = wezterm.action.ShowDebugOverlay },
+}
 -- and finally, return the configuration to wezterm
 return config
