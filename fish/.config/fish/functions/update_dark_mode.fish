@@ -29,7 +29,7 @@ function set_k9s_theme
 end
 
 function set_fish_theme
-    yes | fish_config theme save $argv
+    yes | fish_config theme save "$argv"
 end
 
 function set_starship_theme
