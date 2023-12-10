@@ -34,7 +34,6 @@ config.macos_window_background_blur = 20
 
 config.default_cursor_style = "BlinkingBar"
 
-config.disable_default_key_bindings = true
 config.keys = {
 	{ key = "L", mods = "CTRL|ALT", action = wezterm.action.ShowDebugOverlay },
 }
