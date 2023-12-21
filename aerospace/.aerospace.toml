@@ -62,7 +62,7 @@ alt-t = 'exec-and-forget open -a wezterm'
 alt-b = 'exec-and-forget open -a /Applications/Arc.app/Contents/MacOS/Arc'
 alt-n = 'exec-and-forget open -a /Applications/Logseq.app/Contents/MacOS/Logseq'
 alt-c = 'exec-and-forget open -a /System/Applications/Calendar.app/Contents/MacOS/Calendar'
-alt-shift-c = 'exec-and-forget open -a /Applications/OBS.app/Contents/MacOS/OBS\ Studio --args --startvirtualcam'
+alt-shift-c = 'exec-and-forget open -a /Applications/OBS.app/Contents/MacOS/OBS --args --startvirtualcam'
 
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#layout
 alt-slash = 'layout tiles horizontal vertical'
