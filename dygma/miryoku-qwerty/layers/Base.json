@@ -433,10 +433,9 @@
       "verbose": "Disabled"
     },
     {
-      "keyCode": 0,
-      "label": "KEY",
-      "extraLabel": "NO",
-      "verbose": "Disabled"
+      "keyCode": 6433,
+      "label": "4",
+      "extraLabel": "C+S+O+"
     },
     {
       "keyCode": 0,
@@ -533,7 +532,7 @@
     5,
     1,
     12,
-    12,
+    0,
     12,
     0,
     12,
