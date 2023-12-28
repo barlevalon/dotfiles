@@ -1,0 +1,7 @@
+vim.keymap.set('n', '<leader>qq', "<cmd>qa<CR>", {desc="Quit", silent=true})
+vim.keymap.set('n', '<leader>wq', "<cmd>wqa<CR>", {desc="Quit (write)", silent=true})
+vim.keymap.set('n', '<leader>l', "<cmd>Lazy<CR>", {desc="Lazy", silent=true})
+vim.keymap.set('n', '<C-h>', "<cmd>wincmd h<CR>", {desc="Pane left", silent=true})
+vim.keymap.set('n', '<C-j>', "<cmd>wincmd j<CR>", {desc="Pane down", silent=true})
+vim.keymap.set('n', '<C-k>', "<cmd>wincmd k<CR>", {desc="Pane up", silent=true})
+vim.keymap.set('n', '<C-l>', "<cmd>wincmd l<CR>", {desc="Pane right", silent=true})
