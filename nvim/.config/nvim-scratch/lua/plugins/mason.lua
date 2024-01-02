@@ -56,6 +56,7 @@ return {
 				"pylint", -- python linter
 				"eslint_d", -- js linter
 				"gofumpt",
+				"goimports",
 				"pylint",
 				"tflint",
 			},
