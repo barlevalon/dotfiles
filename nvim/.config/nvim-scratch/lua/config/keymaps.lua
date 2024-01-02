@@ -7,6 +7,8 @@ map("n", "<leader>uh", "<cmd>nohl<CR>", { desc = "Clear search highlights" })
 map("n", "<leader>qq", "<cmd>qa<CR>", { desc = "Quit", silent = true })
 map("n", "<leader>qw", "<cmd>wqa<CR>", { desc = "Quit (write)", silent = true })
 
+map("n", "<C-s>", "<cmd>w<cr>", { silent = true })
+
 -- window management
 map("n", "<leader>sv", "<C-w>v", { desc = "Split window vertically" }) -- split window vertically
 map("n", "<leader>sh", "<C-w>s", { desc = "Split window horizontally" }) -- split window horizontally
