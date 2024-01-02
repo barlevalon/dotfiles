@@ -3,9 +3,6 @@ return {
 		"echasnovski/mini.bufremove",
 		version = false,
 		opts = {},
-		keys = {
-			{ "<leader>bd", "" },
-		},
 	},
 	{
 		"akinsho/bufferline.nvim",
