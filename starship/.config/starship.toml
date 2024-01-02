@@ -109,8 +109,9 @@ format = '\[[$symbol($version)]($style)\]'
 disabled = false
 format = '\[[$symbol$context( \($namespace\))]($style)\]'
 
-[kubernetes.context_aliases]
-'arn:aws:eks:(?P<var_region>.*):641756436960:cluster/(?P<var_cluster>.*)' = '$var_region/$var_cluster'
+[[kubernetes.contexts]]
+context_pattern = "arn:aws:eks:(?P<var_region>.*):641756436960:cluster/(?P<var_cluster>.*)"
+context_alias = "$var_region/$var_cluster"
 
 [lua]
 format = '\[[$symbol($version)]($style)\]'
