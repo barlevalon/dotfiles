@@ -14,4 +14,4 @@ opt.smartcase = true
 opt.termguicolors = true
 opt.signcolumn = "yes"
 opt.swapfile = false
-opt.scrolloff = 999
+opt.scrolloff = 10
