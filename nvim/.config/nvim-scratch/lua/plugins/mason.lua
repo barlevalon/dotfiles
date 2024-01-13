@@ -34,14 +34,13 @@ return {
 				"svelte",
 				"lua_ls",
 				"graphql",
-				"emmet_ls",
-				"prismals",
 				"pyright",
 				"gopls",
 				"yamlls",
 				"terraformls",
 				"ansiblels",
 				"bashls",
+				"golangci_lint_ls",
 			},
 			-- auto-install configured servers (with lspconfig)
 			automatic_installation = true, -- not the same as ensure_installed
@@ -57,6 +56,7 @@ return {
 				"eslint_d", -- js linter
 				"gofumpt",
 				"goimports",
+				"golangci-lint",
 				"pylint",
 				"tflint",
 			},
