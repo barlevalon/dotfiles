@@ -22,7 +22,7 @@ return {
 			},
 		},
 		daily_notes = {
-			folder = "dailies",
+			folder = "Daily",
 		},
 	},
 }
