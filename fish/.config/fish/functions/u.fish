@@ -1,5 +1,6 @@
 #!/usr/bin/env fish
 function u
+  sudo -v
   gum style \
       --foreground 12 --border-foreground 12 --border double \
       --align center --width 60 --margin "1 0" --padding "1 0" \
@@ -23,10 +24,10 @@ function u
   echo "✅ 🐠 fisher plugins updated"
 
   killall nvim
-  gum spin --spinner globe --title "💤 lazy.nvim syncing..." -- nvim --headless "+Lazy! sync" +qa
+  gum spin --spinner globe --title "💤 lazy.nvim syncing..." -- vim --headless "+Lazy! sync" +qa
   echo "✅ 💤 lazy.nvim synced"
 
-  gum spin --spinner globe --title "🧰 mason.nvim updating" -- nvim --headless "+Lazy! load mason.nvim" "+MasonUpdate" +qa
+  gum spin --spinner globe --title "🧰 mason.nvim updating" -- vim --headless "+Lazy! load mason.nvim" "+MasonUpdate" +qa
   echo "✅ 🧰 mason.nvim updated"
 
   gum spin --spinner globe --title "🍻 brew updating" --show-output -- brew update >>/tmp/u-$NOW.txt
