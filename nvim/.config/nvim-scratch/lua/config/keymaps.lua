@@ -46,4 +46,7 @@ map("n", "<C-a>", "ggVG", { desc = "Select all" })
 -- Replace all instances of highlighted words
 map("v", "<leader>rr", '"hy:%s/<C-r>h//g<left><left>', { desc = "Replace all instances of highlighted words" })
 
+map("v", "<", "<gv", { desc = "Indent left", noremap = true, silent = true })
+map("v", ">", ">gv", { desc = "Indent right", noremap = true, silent = true })
+
 map("n", "<leader>gg", "<cmd>LazyGit<cr>", { desc = "LazyGit", silent = true })
