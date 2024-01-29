@@ -105,7 +105,7 @@ alt-shift-4 = 'move-node-to-workspace 4'
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#workspace-back-and-forth
 alt-tab = 'workspace-back-and-forth'
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#move-workspace-to-display
-alt-shift-tab = 'move-workspace-to-display next'
+alt-shift-tab = 'move-workspace-to-display next --wrap-around'
 
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#mode
 alt-shift-semicolon = 'mode service'
