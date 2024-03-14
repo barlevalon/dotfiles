@@ -12,7 +12,8 @@ return {
 			typescriptreact = { "eslint_d" },
 			svelte = { "eslint_d" },
 			python = { "pylint" },
-			terraform = { "tflint" },
+			terraform = { "terraform_validate" },
+			tf = { "terraform_validate" },
 			go = { "golangcilint" },
 		}
 

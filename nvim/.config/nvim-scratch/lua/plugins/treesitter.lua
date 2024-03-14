@@ -6,6 +6,8 @@ return {
 			ensure_installed = {
 				"markdown",
 				"markdown_inline",
+				"hcl",
+				"terraform",
 			},
 			auto_install = true,
 			highlight = { enable = true },
