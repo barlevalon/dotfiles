@@ -2,6 +2,7 @@ vim.g.mapleader = " "
 
 local map = vim.keymap.set
 
+map("n", "<Esc>", "<cmd>nohlsearch<CR>")
 map("n", "<leader>uh", "<cmd>nohl<CR>", { desc = "Clear search highlights" })
 
 map("n", "<leader>qq", "<cmd>qa<CR>", { desc = "Quit", silent = true })

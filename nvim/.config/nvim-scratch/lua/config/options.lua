@@ -15,3 +15,5 @@ opt.termguicolors = true
 opt.signcolumn = "yes"
 opt.swapfile = false
 opt.scrolloff = 10
+opt.undofile = true
+opt.hlsearch = true
