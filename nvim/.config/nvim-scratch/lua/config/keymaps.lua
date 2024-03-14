@@ -51,3 +51,4 @@ map("v", "<", "<gv", { desc = "Indent left", noremap = true, silent = true })
 map("v", ">", ">gv", { desc = "Indent right", noremap = true, silent = true })
 
 map("n", "<leader>gg", "<cmd>LazyGit<cr>", { desc = "LazyGit", silent = true })
+map("n", "<leader>gf", "<cmd>LazyGitFilterCurrentFile<cr>", { desc = "LazyGit current file history", silent = true })
