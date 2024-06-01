@@ -36,7 +36,7 @@ return {
 			keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts)
 
 			opts.desc = "Line diagnostics"
-			keymap.set("n", "<leader>d", vim.diagnostics.open_float, opts)
+			keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)
 
 			opts.desc = "Prev diagnostic"
 			keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
