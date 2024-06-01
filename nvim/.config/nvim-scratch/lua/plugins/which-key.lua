@@ -19,6 +19,9 @@ return {
 				x = { name = "+trouble" },
 				q = { name = "+quit" },
 			},
+			["g"] = {
+				s = { name = "+surround" },
+			},
 		})
 	end,
 }
