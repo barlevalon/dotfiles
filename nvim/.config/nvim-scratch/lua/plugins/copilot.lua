@@ -1,6 +1,7 @@
 return {
 	{
 		"zbirenbaum/copilot.lua",
+		enabled = false,
 		cmd = "Copilot",
 		build = ":Copilot auth",
 		event = "InsertEnter",
@@ -15,6 +16,7 @@ return {
 	},
 	{
 		"zbirenbaum/copilot-cmp",
+		enabled = false,
 		dependencies = {
 			"zbirenbaum/copilot.lua",
 		},
