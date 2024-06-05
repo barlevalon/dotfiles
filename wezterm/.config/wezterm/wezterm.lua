@@ -14,7 +14,7 @@ if wezterm.config_builder then
 	config = wezterm.config_builder()
 end
 
-config.font_size = 18
+config.font_size = 20
 config.font = wezterm.font({
 	family = "JetBrainsMono Nerd Font",
 })
