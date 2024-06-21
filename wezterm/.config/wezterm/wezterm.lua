@@ -1,11 +1,11 @@
 local wezterm = require("wezterm")
 
 local function scheme_for_appearance(appearance)
-	if appearance:find("Dark") then
-		return "Catppuccin Macchiato"
-	else
-		return "Catppuccin Latte"
-	end
+	-- if appearance:find("Dark") then
+	return "Catppuccin Macchiato"
+	-- else
+	-- 	return "Catppuccin Latte"
+	-- end
 end
 
 local config = {}

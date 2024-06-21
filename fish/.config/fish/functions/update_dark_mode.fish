@@ -1,7 +1,8 @@
 #!/usr/bin/env /opt/homebrew/bin/fish
 
 function update_dark_mode
-    set -xg appearance (defaults read ~/Library/Preferences/.GlobalPreferences.plist AppleInterfaceStyle 2>/dev/null)
+    # set -xg appearance (defaults read ~/Library/Preferences/.GlobalPreferences.plist AppleInterfaceStyle 2>/dev/null)
+    set -xg appearance "Dark"
     if [ "$appearance" = Dark ]
         tmux source-file ~/.config/tmux/dark.conf
         set_bat_theme Catppuccin-macchiato
