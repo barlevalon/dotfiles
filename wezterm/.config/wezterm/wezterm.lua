@@ -16,7 +16,8 @@ end
 
 config.font_size = 20
 config.font = wezterm.font({
-	family = "JetBrainsMono Nerd Font",
+	-- family = "JetBrainsMono Nerd Font",
+	family = "MesloLGM Nerd Font",
 })
 config.color_scheme = scheme_for_appearance(wezterm.gui.get_appearance())
 
