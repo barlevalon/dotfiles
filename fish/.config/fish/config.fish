@@ -10,3 +10,4 @@ set -q INFOPATH; or set INFOPATH ''; set -gx INFOPATH "/opt/homebrew/share/info"
 
 # Created by `pipx` on 2023-02-01 11:09:22
 set PATH $PATH /Users/alonhearter/Library/Python/3.10/bin
+enable_transience
