@@ -7,7 +7,7 @@ return {
 	end,
 	config = function()
 		local wk = require("which-key")
-		wk.register({
+		wk.add({
 			{ "<leader>b", group = "buffer" },
 			{ "<leader>c", group = "code" },
 			{ "<leader>d", group = "debug" },
