@@ -17,3 +17,15 @@ opt.swapfile = false
 opt.scrolloff = 10
 opt.undofile = true
 opt.hlsearch = true
+
+vim.g.clipboard = {
+	name = "pb",
+	copy = {
+		["+"] = "pbcopy",
+		["*"] = "pbcopy",
+	},
+	paste = {
+		["+"] = "pbpaste",
+		["*"] = "pbpaste",
+	},
+}
