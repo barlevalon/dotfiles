@@ -6,7 +6,8 @@
 	gpgsign = true
 [user]
 	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN1kjySs8SndASeQdQlGLrhqb6XzPOBwi88tIaU58EOP
-	email = 3397911+barlevalon@users.noreply.github.com
+	email = barlevalon@users.noreply.github.com
+  name = Alon Hearter
 [pull]
 	rebase = true
 [rebase]
