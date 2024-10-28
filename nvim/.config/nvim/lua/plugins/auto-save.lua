@@ -1,9 +1,6 @@
 return {
 	"okuuva/auto-save.nvim",
 	opts = {
-		execution_message = {
-			enabled = false,
-		},
 		condition = function(buf)
 			local fn = vim.fn
 
