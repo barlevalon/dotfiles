@@ -39,11 +39,11 @@ default-root-container-orientation = 'auto'
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#assign-workspaces-to-monitors
 # [workspace-to-monitor-force-assignment]
 [workspace-to-monitor-force-assignment]
-0 = 'secondary'
+0 = 'built-in'
 1 = 'main'
 2 = 'main'
 3 = 'main'
-4 = 'main'
+4 = ['(2)', 'main']
 
 # It's a declaration of 'main' binding mode. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
 # 'main' binding mode must be always presented
