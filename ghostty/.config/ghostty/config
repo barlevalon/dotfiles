@@ -1,2 +1,4 @@
-macos-titlebar-style = hidden
+theme = catppuccin-frappe
+font-family = MesloLGM Nerd Font Mono
 font-size = 20
+macos-titlebar-style = hidden
