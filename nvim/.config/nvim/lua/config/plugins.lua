@@ -15,6 +15,9 @@ require("lazy").setup({ { import = "plugins" } }, {
 	install = {
 		colorscheme = { "catppuccin-macchiato" },
 	},
+	ui = {
+		border = "rounded",
+	},
 })
 
 vim.keymap.set("n", "<leader>l", "<cmd>Lazy<CR>", { desc = "Lazy", silent = true })
