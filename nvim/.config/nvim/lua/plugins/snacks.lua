@@ -23,5 +23,21 @@ return {
 			desc = "LazyGit",
 			silent = true,
 		},
+		{
+			"<leader>gf",
+			function()
+				Snacks.lazygit.log_file()
+			end,
+			desc = "LazyGit file history",
+			silent = true,
+		},
+		{
+			"<leader>gl",
+			function()
+				Snacks.lazygit.log()
+			end,
+			desc = "LazyGit log",
+			silent = true,
+		},
 	},
 }
