@@ -38,8 +38,8 @@ map("n", "<Tab>", ":bn<CR>", { desc = "Next buffer", silent = true })
 map("n", "<S-Tab>", ":bp<CR>", { desc = "Prev buffer", silent = true })
 
 -- Increment/decrement
-map("n", "+", "<C-a>", { desc = "Increment number under cursor" })
-map("n", "-", "<C-x>", { desc = "Decrement number under cursor" })
+map("n", "+", "<C-x>", { desc = "Increment number under cursor" })
+map("n", "-", "<C-a>", { desc = "Decrement number under cursor" })
 
 -- Select all
 map("n", "<C-a>", "ggVG", { desc = "Select all" })
