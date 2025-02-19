@@ -43,7 +43,7 @@ default-root-container-orientation = 'auto'
 1 = 'main'
 2 = 'main'
 3 = 'main'
-4 = ['(2)', 'main']
+4 = 'main'
 
 # It's a declaration of 'main' binding mode. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
 # 'main' binding mode must be always presented
