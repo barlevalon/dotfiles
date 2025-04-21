@@ -4,6 +4,17 @@ return {
 	event = { "BufReadPre", "BufNewFile" }, -- to disable, comment this out
 	config = function()
 		local lint = require("lint")
+		local golint = require("lint").linters.golangcilint
+
+		golint.args = {
+			"run",
+			"--output.json.path=stdout",
+			"--issues-exit-code=0",
+			"--show-stats=false",
+			function()
+				return vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+			end,
+		}
 
 		lint.linters_by_ft = {
 			javascript = { "eslint_d" },
@@ -15,6 +26,7 @@ return {
 			terraform = { "terraform_validate" },
 			tf = { "terraform_validate" },
 			go = { "golangcilint" },
+			yaml = { "yamllint" },
 		}
 
 		local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
