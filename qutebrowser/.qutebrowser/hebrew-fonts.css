@@ -1,0 +1,4 @@
+/* ~/.qutebrowser/hebrew-fonts.css */
+:lang(he) {
+  font-family: "Noto Sans Hebrew", "SBL Hebrew", "David CLM", sans-serif !important;
+}
