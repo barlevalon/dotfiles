@@ -60,7 +60,7 @@ default-root-container-orientation = 'auto'
 # App launching
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#exec-and-forget
 alt-t = 'exec-and-forget open -a ghostty'
-alt-b = 'exec-and-forget ~/.local/bin/qutebrowser :nop'
+alt-b = 'exec-and-forget open -a /Applications/Arc.app/Contents/MacOS/Arc'
 alt-n = 'exec-and-forget open -a /Applications/Obsidian.app/Contents/MacOS/Obsidian'
 alt-c = 'exec-and-forget open -a /System/Applications/Calendar.app/Contents/MacOS/Calendar'
 
