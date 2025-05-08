@@ -1,55 +1,61 @@
 {
-  "actions" : [
+  "actions": [
     {
-      "key" : "t",
-      "label" : "",
-      "type" : "application",
-      "value" : "/Applications/Ghostty.app"
+      "key": "t",
+      "label": "",
+      "type": "application",
+      "value": "/Applications/Ghostty.app"
     },
     {
-      "key" : "b",
-      "label" : "",
-      "type" : "application",
-      "value" : "/Applications/Arc.app"
+      "key": "b",
+      "label": "",
+      "type": "application",
+      "value": "/Applications/Arc.app"
     },
     {
-      "key" : "o",
-      "label" : "Open",
-      "type" : "group",
-      "actions" : [
+      "actions": [
         {
-          "key" : "a",
-          "label" : "",
-          "type" : "application",
-          "value" : "/Applications/Arc.app"
-        },
-      ],
-    },
-    {
-      "key" : "r",
-      "label" : "Raycast",
-      "type" : "group",
-      "actions" : [
-        {
-          "key" : "e",
-          "label" : "",
-          "type" : "url",
-          "value" : "raycast://extensions/raycast/emoji-symbols/search-emoji-symbols"
+          "key": "a",
+          "label": "",
+          "type": "application",
+          "value": "/Applications/Arc.app"
         },
         {
-          "key" : "p",
-          "label" : "",
-          "type" : "url",
-          "value" : "raycast://confetti"
-        },
-        {
-          "key" : "c",
-          "label" : "",
-          "type" : "url",
-          "value" : "raycast://extensions/raycast/system/open-camera"
+          "key": "z",
+          "label": "",
+          "type": "application",
+          "value": "/Applications/Zed.app"
         }
       ],
+      "key": "o",
+      "label": "Open",
+      "type": "group"
+    },
+    {
+      "actions": [
+        {
+          "key": "e",
+          "label": "",
+          "type": "url",
+          "value": "raycast://extensions/raycast/emoji-symbols/search-emoji-symbols"
+        },
+        {
+          "key": "p",
+          "label": "",
+          "type": "url",
+          "value": "raycast://confetti"
+        },
+        {
+          "key": "c",
+          "label": "",
+          "type": "url",
+          "value": "raycast://extensions/raycast/system/open-camera"
+        }
+      ],
+      "key": "r",
+      "label": "Raycast",
+      "type": "group"
     }
   ],
-  "type" : "group"
+  "type": "group"
 }
