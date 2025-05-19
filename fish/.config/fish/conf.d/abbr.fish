@@ -1,2 +1,5 @@
 abbr k 'kubectl'
 abbr tf 'terraform'
+abbr cx 'chmod +x'
+abbr c 'clear'
+abbr cls 'clear'
