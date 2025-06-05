@@ -13,6 +13,20 @@ return {
 		-- statuscolumn = { enabled = true },
 		-- words = { enabled = true },
 		lazygit = {},
+		picker = {
+			sources = {
+				files = {
+					hidden = true,
+				},
+				grep = {
+					hidden = true,
+				},
+				explorer = {
+					hidden = true,
+				},
+				todo_comments = {},
+			},
+		},
 		dashboard = {
 			sections = {
 				{ section = "header" },
@@ -43,6 +57,76 @@ return {
 		},
 	},
 	keys = {
+		{
+			"<leader><space>",
+			function()
+				Snacks.picker.smart()
+			end,
+			desc = "Smart Find Files",
+		},
+		{
+			"<leader>/",
+			function()
+				Snacks.picker.grep()
+			end,
+			desc = "Grep",
+		},
+		{
+			"<leader>:",
+			function()
+				Snacks.picker.command_history()
+			end,
+			desc = "Command History",
+		},
+		{
+			"<leader>n",
+			function()
+				Snacks.picker.notifications()
+			end,
+			desc = "Notification History",
+		},
+		{
+			"<leader>fb",
+			function()
+				Snacks.picker.buffers()
+			end,
+			desc = "Find Buffers",
+		},
+		{
+			"<leader>fh",
+			function()
+				Snacks.picker.help()
+			end,
+			desc = "Find Help",
+		},
+		{
+			"<leader>fr",
+			function()
+				Snacks.picker.recent()
+			end,
+			desc = "Recent Files",
+		},
+		{
+			"<leader>fm",
+			function()
+				Snacks.picker.marks()
+			end,
+			desc = "Find Marks",
+		},
+		{
+			"<leader>fd",
+			function()
+				Snacks.picker.diagnostics()
+			end,
+			desc = "Find Diagnostics",
+		},
+		{
+			"<leader>e",
+			function()
+				Snacks.picker.explorer()
+			end,
+			desc = "File explorer",
+		},
 		{
 			"<leader>gg",
 			function()

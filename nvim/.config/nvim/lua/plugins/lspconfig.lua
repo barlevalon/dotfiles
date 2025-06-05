@@ -6,6 +6,13 @@ return {
 		{ "antosha417/nvim-lsp-file-operations", config = true },
 	},
 	config = function()
+		-- Disable default LSP keymaps to avoid conflicts
+		vim.keymap.del("n", "grr")
+		vim.keymap.del("n", "gra")
+		vim.keymap.del("x", "gra")
+		vim.keymap.del("n", "grn")
+		vim.keymap.del("n", "gri")
+
 		local lspconfig = require("lspconfig")
 		local cmp_nvim_lsp = require("cmp_nvim_lsp")
 		local keymap = vim.keymap
@@ -18,13 +25,19 @@ return {
 			keymap.set("n", "K", vim.lsp.buf.hover, opts)
 
 			opts.desc = "Definitions"
-			keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts)
+			keymap.set("n", "gd", function()
+				Snacks.picker.lsp_definitions()
+			end, opts)
 
 			opts.desc = "Implementations"
-			keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts)
+			keymap.set("n", "gi", function()
+				Snacks.picker.lsp_implementations()
+			end, opts)
 
 			opts.desc = "References"
-			keymap.set("n", "gr", "<cmd>Telescope lsp_references<CR>", opts)
+			keymap.set("n", "gr", function()
+				Snacks.picker.lsp_references()
+			end, opts)
 
 			opts.desc = "Actions"
 			keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
@@ -33,7 +46,9 @@ return {
 			keymap.set("n", "<leader>cr", vim.lsp.buf.rename, opts)
 
 			opts.desc = "File Diagnostics"
-			keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts)
+			keymap.set("n", "<leader>D", function()
+				Snacks.picker.diagnostics({ current = true })
+			end, opts)
 
 			opts.desc = "Line diagnostics"
 			keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)
@@ -56,11 +71,6 @@ return {
 			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 		end
 
-		lspconfig["gopls"].setup({
-			capabilities = capabilities,
-			on_attach = on_attach,
-		})
-
 		lspconfig.terraformls.setup({
 			capabilities = capabilities,
 			on_attach = on_attach,
@@ -69,31 +79,6 @@ return {
 		lspconfig.ts_ls.setup({
 			capabilities = capabilities,
 			on_attach = on_attach,
-		})
-		local configs = require("lspconfig/configs")
-
-		if not configs.golangcilsp then
-			configs.golangcilsp = {
-				default_config = {
-					cmd = { "golangci-lint-langserver" },
-					root_dir = lspconfig.util.root_pattern(".git", "go.mod"),
-					init_options = {
-						command = {
-							"golangci-lint",
-							"run",
-							"--enable-all",
-							"--disable",
-							"lll",
-							"--out-format",
-							"json",
-							"--issues-exit-code=1",
-						},
-					},
-				},
-			}
-		end
-		lspconfig.golangci_lint_ls.setup({
-			filetypes = { "go", "gomod" },
 		})
 
 		lspconfig["lua_ls"].setup({
@@ -112,6 +97,19 @@ return {
 					},
 				},
 			},
+		})
+
+		-- Disable golangci_lint_ls entirely
+		lspconfig.golangci_lint_ls = nil
+
+		-- Set default handler for auto-started servers to use our on_attach
+		vim.api.nvim_create_autocmd("LspAttach", {
+			callback = function(event)
+				local client = vim.lsp.get_client_by_id(event.data.client_id)
+				if client and client.name == "gopls" then
+					on_attach(client, event.buf)
+				end
+			end,
 		})
 	end,
 }
