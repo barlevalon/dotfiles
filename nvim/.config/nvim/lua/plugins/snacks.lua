@@ -121,6 +121,13 @@ return {
 			desc = "Find Diagnostics",
 		},
 		{
+			"<leader>fk",
+			function()
+				Snacks.picker.keymaps()
+			end,
+			desc = "Keymaps",
+		},
+		{
 			"<leader>e",
 			function()
 				Snacks.picker.explorer()
