@@ -1,15 +1,13 @@
 set fish_greeting
-set -gx SHELL /opt/homebrew/bin/fish
+set -gx SHELL /usr/bin/fish
 set -Ux XDG_CONFIG_HOME $HOME/.config
 source $XDG_CONFIG_HOME/fish/themes/fish_tokyonight_storm.fish
-set -gx HOMEBREW_PREFIX "/opt/homebrew";
-set -gx HOMEBREW_CELLAR "/opt/homebrew/Cellar";
-set -gx HOMEBREW_REPOSITORY "/opt/homebrew";
-set -q MANPATH; or set MANPATH ''; set -gx MANPATH "/opt/homebrew/share/man" $MANPATH;
-set -q INFOPATH; or set INFOPATH ''; set -gx INFOPATH "/opt/homebrew/share/info" $INFOPATH;
 
 # Created by `pipx` on 2023-02-01 11:09:22
-set PATH $PATH /Users/alonhearter/Library/Python/3.10/bin
+set PATH $PATH $HOME/.local/bin
 enable_transience
 
 alias claude="/home/alon/.claude/local/claude"
+
+# Remap fzf variables search from Ctrl+v to Ctrl+Alt+v (to avoid conflict with paste)
+fzf_configure_bindings --variables=\e\cv
