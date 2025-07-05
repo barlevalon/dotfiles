@@ -1,2 +1,4 @@
 lazygit/.config/lazygit/state.yml
 klbs/.config/klbs/klbs.toml
+theme/.config/theme/*.jpg
+theme/.config/theme/*.png
