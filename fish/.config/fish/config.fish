@@ -1,3 +1,8 @@
+# Start Hyprland on tty1
+if test -z "$DISPLAY"; and test (tty) = "/dev/tty1"
+    exec Hyprland
+end
+
 set fish_greeting
 set -gx SHELL /usr/bin/fish
 set -Ux XDG_CONFIG_HOME $HOME/.config
