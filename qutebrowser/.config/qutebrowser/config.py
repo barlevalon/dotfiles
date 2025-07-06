@@ -11,6 +11,6 @@ en_keys = "qwertyuiopasdfghjkl'zxcvbnm,./"
 he_keys = '/׳קראטוןםפשדגכעיחלך,זסבהנמצתץ.'
 c.bindings.key_mappings.update(dict(zip(he_keys, en_keys)))
 
-c.content.user_stylesheets = ["~/.qutebrowser/hebrew-fonts.css"]
+c.content.user_stylesheets = ["~/.config/qutebrowser/hebrew-fonts.css"]
 
 c.bindings.key_mappings = {'<Ctrl-Escape>':':fake-key <esc>'}
