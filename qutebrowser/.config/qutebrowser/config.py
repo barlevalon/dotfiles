@@ -14,3 +14,6 @@ c.bindings.key_mappings.update(dict(zip(he_keys, en_keys)))
 c.content.user_stylesheets = ["~/.config/qutebrowser/hebrew-fonts.css"]
 
 c.bindings.key_mappings = {'<Ctrl-Escape>':':fake-key <esc>'}
+
+# Enable GPU hardware acceleration
+c.qt.args = ["enable-features=VaapiVideoDecoder,VaapiVideoEncoder", "enable-gpu-rasterization", "enable-zero-copy"]
