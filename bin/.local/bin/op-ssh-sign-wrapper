@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+# Check if 1Password is running and the agent is accessible
+if ! ssh-add -l &>/dev/null; then
+    # Check if 1Password is running at all
+    if ! pgrep -x 1password >/dev/null; then
+        # Start 1Password
+        systemctl --user start 1password
+        
+        # Give it a moment to start
+        sleep 2
+        
+        # If still not running, start it directly
+        if ! pgrep -x 1password >/dev/null; then
+            /opt/1Password/1password &
+            sleep 3
+        fi
+    fi
+    
+    # If agent still not accessible, 1Password needs unlock
+    if ! ssh-add -l &>/dev/null; then
+        # Bring 1Password to front by starting it again (won't create duplicate)
+        /opt/1Password/1password &
+        
+        # Wait for user to unlock
+        echo "Waiting for 1Password unlock..." >&2
+        while ! ssh-add -l &>/dev/null; do
+            sleep 1
+        done
+    fi
+fi
+
+# Now call the actual op-ssh-sign
+exec /opt/1Password/op-ssh-sign "$@"

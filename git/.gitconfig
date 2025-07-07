@@ -1,7 +1,7 @@
 [gpg]
 	format = ssh
 [gpg "ssh"]
-	program = /opt/1Password/op-ssh-sign
+	program = /home/alon/.local/bin/op-ssh-sign-wrapper
 [commit]
 	gpgsign = true
 [user]
@@ -32,3 +32,5 @@
   conflictstyle = diff3
 [diff]
   colorMoved = default
+[log]
+	date = local
