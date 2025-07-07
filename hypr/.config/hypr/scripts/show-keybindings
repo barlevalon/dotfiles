@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Extract keybindings from hyprland config
+BINDINGS=$(grep -E "^bind[[:space:]]*=" ~/.config/hypr/bindings.conf | \
+    sed -E 's/^bind[[:space:]]*=[[:space:]]*//; s/,[[:space:]]*exec,[[:space:]]*/ → /; s/,[[:space:]]*/ → /' | \
+    awk -F' → ' '{printf "%-25s %s\n", $1, $2}' | \
+    sort)
+
+# Show keybindings in a notification or terminal
+if command -v wofi &> /dev/null; then
+    echo "$BINDINGS" | wofi --dmenu --prompt "Keybindings" --width 800 --height 600 --cache-file /dev/null
+else
+    # Fallback to terminal output
+    echo "=== Hyprland Keybindings ==="
+    echo "$BINDINGS"
+    echo ""
+    echo "Press any key to exit..."
+    read -n 1
+fi

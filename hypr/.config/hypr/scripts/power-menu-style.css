@@ -1,0 +1,19 @@
+@import "/home/alon/.config/theme/wofi.css";
+
+* {
+  font-size: 24px !important;
+}
+
+#entry {
+  padding: 8px 15px;
+  margin: 2px 0;
+}
+
+#text {
+  font-size: 24px !important;
+  margin: 5px 10px;
+}
+
+window {
+  padding: 20px;
+}

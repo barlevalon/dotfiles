@@ -14,8 +14,7 @@
       "network",
       "pulseaudio",
       "cpu",
-      "power-profiles-daemon",
-      "battery"
+      "custom/power-menu"
     ],
     "hyprland/workspaces": {
       "on-click": "activate",
@@ -63,28 +62,6 @@
       "nospacing": 1,
       "on-click": "ghostty -e iwctl"
     },
-    "battery": {
-      "format": "{capacity}% {icon}",
-      "format-discharging": "{icon}",
-      "format-charging":    "{icon}",
-      "format-plugged":     "",
-        "format-icons": {
-          "charging": [
-            "󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"
-          ],
-          "default": [
-            "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"
-          ]
-        },
-      "format-full": "Charged ",
-      "tooltip-format-discharging": "{power:>1.0f}W↓ {capacity}%",
-      "tooltip-format-charging": "{power:>1.0f}W↑ {capacity}%",
-      "interval": 5,
-      "states": {
-        "warning": 20,
-        "critical": 10
-      }
-    },
     "bluetooth": {
       "format": "",
       "format-disabled": "󰂲",
@@ -101,14 +78,9 @@
       "on-click-right": "pamixer -t",
       "ignored-sinks": ["Easy Effects Sink"]
     },
-    "power-profiles-daemon": {
-      "format": "{icon}",
-      "tooltip-format": "Power profile: {profile}",
-      "tooltip": true,
-      "format-icons": {
-        "power-saver": "󰡳",
-        "balanced":     "󰊚",
-        "performance":  "󰡴"
-      }
-    },
+    "custom/power-menu": {
+      "format": "󰐥",
+      "on-click": "~/.config/hypr/scripts/power-menu",
+      "tooltip": false
+    }
 }
