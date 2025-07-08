@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+# Load SSH keys from 1Password to local filesystem
+# This allows using standard ssh-agent instead of 1Password's SSH agent
+
+set -euo pipefail
+
+SSH_DIR="$HOME/.ssh"
+mkdir -p "$SSH_DIR"
+chmod 700 "$SSH_DIR"
+
+echo "Loading SSH keys from 1Password..."
+
+# Function to save a key from 1Password
+save_key() {
+    local item_name="$1"
+    local file_name="$2"
+    local vault="${3:-Private}"  # Default to Private vault
+    
+    echo "Loading $item_name from $vault vault..."
+    
+    # Get private key using secret reference with OpenSSH format
+    if op read "op://$vault/$item_name/private key?ssh-format=openssh" > "$SSH_DIR/$file_name" 2>/dev/null; then
+        chmod 600 "$SSH_DIR/$file_name"
+        
+        # Get public key
+        if op read "op://$vault/$item_name/public key" > "$SSH_DIR/${file_name}.pub" 2>/dev/null; then
+            chmod 644 "$SSH_DIR/${file_name}.pub"
+            echo "✓ Loaded $file_name"
+        else
+            echo "⚠ Could not load public key for $item_name"
+        fi
+    else
+        echo "✗ Failed to load $item_name"
+    fi
+}
+
+# Load your keys - adjust these based on your 1Password item names
+save_key "id_ed25519" "id_ed25519"
+save_key "id_rsa" "id_rsa"
+save_key "sage mac" "sage_mac_ed25519"  # Your other ED25519 key
+# Add more keys as needed
+
+echo ""
+echo "Keys loaded. You can now use standard ssh-agent."
+echo "Run 'ssh-add' to add keys to your agent."

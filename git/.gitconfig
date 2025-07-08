@@ -1,7 +1,5 @@
 [gpg]
 	format = ssh
-[gpg "ssh"]
-	program = /home/alon/.local/bin/op-ssh-sign-wrapper
 [commit]
 	gpgsign = true
 [user]
