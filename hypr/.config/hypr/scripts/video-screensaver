@@ -30,4 +30,12 @@ fi
 pkill mpvpaper
 
 # Start video on top layer with input disabled
-exec mpvpaper --layer top -o "loop panscan=1.0 input-default-bindings=no input-vo-keyboard=no" '*' "$SCREENSAVER_VIDEO"
+mpvpaper --layer top -o "loop panscan=1.0 input-default-bindings=no input-vo-keyboard=no" '*' "$SCREENSAVER_VIDEO" &
+MPVPAPER_PID=$!
+
+# Move cursor off-screen to hide it
+sleep 0.5
+hyprctl dispatch movecursor 10000 10000
+
+# Wait for mpvpaper
+wait $MPVPAPER_PID
