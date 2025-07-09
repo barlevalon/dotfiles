@@ -25,7 +25,7 @@ General instructions:
 Available commands:
 - jj
 - git
-- gh (get the token from 1password: `GH_TOKEN=$(op read op://Private/Github/token)`)
+- gh (source ~/AGENTS.env for auth token)
 - jira
 - kubectl
 - aws
