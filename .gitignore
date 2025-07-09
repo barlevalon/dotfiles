@@ -1,2 +1,4 @@
 lazygit/.config/lazygit/state.yml
 klbs/.config/klbs/klbs.toml
+tmux/.config/tmux/plugins/
+agents/AGENTS.env
