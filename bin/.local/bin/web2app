@@ -1,0 +1,91 @@
+#!/bin/bash
+# Create a desktop launcher for a web app
+
+web2app() {
+  local USE_CHROMIUM=false
+  
+  # Parse flags
+  while [[ "$#" -gt 0 ]]; do
+    case $1 in
+      --chromium)
+        USE_CHROMIUM=true
+        shift
+        ;;
+      *)
+        break
+        ;;
+    esac
+  done
+  
+  if [ "$#" -ne 3 ]; then
+    echo "Usage: web2app [--chromium] <AppName> <AppURL> <IconURL>"
+    echo "  --chromium    Use Chromium instead of qutebrowser (default: qutebrowser)"
+    echo "  IconURL must be in PNG -- use https://dashboardicons.com"
+    return 1
+  fi
+
+  local APP_NAME="$1"
+  local APP_URL="$2"
+  local ICON_URL="$3"
+  local ICON_DIR="$HOME/.local/share/applications/icons"
+  local DESKTOP_FILE="$HOME/.local/share/applications/${APP_NAME}.desktop"
+  local ICON_PATH="${ICON_DIR}/${APP_NAME}.png"
+
+  mkdir -p "$ICON_DIR"
+
+  if ! curl -sL -o "$ICON_PATH" "$ICON_URL"; then
+    echo "Error: Failed to download icon."
+    return 1
+  fi
+
+  # Set the exec command based on browser choice
+  local EXEC_CMD
+  if [ "$USE_CHROMIUM" = true ]; then
+    EXEC_CMD="chromium --new-window --ozone-platform=wayland --app=\"$APP_URL\" --name=\"$APP_NAME\" --class=\"$APP_NAME\""
+  else
+    EXEC_CMD="qutebrowser --target window -s tabs.show never -s statusbar.show never \"$APP_URL\""
+  fi
+
+  cat > "$DESKTOP_FILE" <<EOF
+[Desktop Entry]
+Version=1.0
+Name=$APP_NAME
+Comment=$APP_NAME
+Exec=$EXEC_CMD
+Terminal=false
+Type=Application
+Icon=$ICON_PATH
+StartupNotify=true
+StartupWMClass=$APP_NAME
+EOF
+
+  chmod +x "$DESKTOP_FILE"
+  local BROWSER_NAME=$( [ "$USE_CHROMIUM" = true ] && echo "Chromium" || echo "qutebrowser" )
+  echo "Web app $APP_NAME created successfully using $BROWSER_NAME!"
+}
+
+web2app-remove() {
+  if [ "$#" -ne 1 ]; then
+    echo "Usage: web2app-remove <AppName>"
+    return 1
+  fi
+
+  local APP_NAME="$1"
+  local ICON_DIR="$HOME/.local/share/applications/icons"
+  local DESKTOP_FILE="$HOME/.local/share/applications/${APP_NAME}.desktop"
+  local ICON_PATH="${ICON_DIR}/${APP_NAME}.png"
+
+  rm -f "$DESKTOP_FILE"
+  rm -f "$ICON_PATH"
+  echo "Web app $APP_NAME removed."
+}
+
+# Run the function if called directly
+if [ "${BASH_SOURCE[0]}" == "${0}" ]; then
+  if [[ "$1" == "-r" ]] || [[ "$1" == "--remove" ]]; then
+    shift
+    web2app-remove "$@"
+  else
+    web2app "$@"
+  fi
+fi
