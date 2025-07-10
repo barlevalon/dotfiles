@@ -1,0 +1,9 @@
+[Plymouth Theme]
+Name=Custom
+Description=Custom Arch Linux splash screen
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/custom
+ScriptFile=/usr/share/plymouth/themes/custom/custom.script
+ConsoleLogBackgroundColor=0x24273a
