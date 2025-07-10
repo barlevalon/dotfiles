@@ -1,4 +1,3 @@
 theme = catppuccin-frappe
 font-family = MesloLGM Nerd Font Mono
 font-size = 18
-macos-titlebar-style = hidden
