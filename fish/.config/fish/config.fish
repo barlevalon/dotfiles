@@ -8,8 +8,7 @@ set -gx SHELL /usr/bin/fish
 set -Ux XDG_CONFIG_HOME $HOME/.config
 source $XDG_CONFIG_HOME/fish/themes/fish_tokyonight_storm.fish
 
-# Created by `pipx` on 2023-02-01 11:09:22
-set PATH $PATH $HOME/.local/bin
+set PATH $HOME/.local/bin $PATH
 enable_transience
 
 alias claude="/home/alon/.claude/local/claude"
