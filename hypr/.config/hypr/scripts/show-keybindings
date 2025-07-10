@@ -1,18 +1,67 @@
 #!/usr/bin/env bash
 
-# Extract keybindings from hyprland config
-BINDINGS=$(grep -E "^bind[[:space:]]*=" ~/.config/hypr/bindings.conf | \
-    sed -E 's/^bind[[:space:]]*=[[:space:]]*//; s/,[[:space:]]*exec,[[:space:]]*/ → /; s/,[[:space:]]*/ → /' | \
-    awk -F' → ' '{printf "%-25s %s\n", $1, $2}' | \
-    sort)
+# A script to display Hyprland keybindings defined in your configuration
+# using wofi for an interactive search menu.
 
-# Show keybindings in a notification or terminal
+# Check multiple potential binding locations
+BINDING_FILES=(
+    "$HOME/.config/hypr/bindings.conf"
+    "$HOME/.config/hypr/hyprland.conf"
+    "$HOME/.config/hypr/user-bindings.conf"
+)
+
+# Process configuration files to extract and format keybindings
+BINDINGS=""
+for file in "${BINDING_FILES[@]}"; do
+    if [[ -f "$file" ]]; then
+        BINDINGS+=$(grep -h '^[[:space:]]*bind' "$file" 2>/dev/null)
+        BINDINGS+=$'\n'
+    fi
+done
+
+# Format the bindings
+FORMATTED_BINDINGS=$(echo "$BINDINGS" | awk -F, '
+{
+    # Skip empty lines
+    if (NF == 0) next;
+    
+    # Strip trailing comments
+    sub(/#.*/, "");
+
+    # Remove the "bind... =" part and surrounding whitespace
+    sub(/^[[:space:]]*bind[^=]*=[[:space:]]*/, "", $1);
+
+    # Combine the modifier and key (first two fields)
+    key_combo = $1 " + " $2;
+
+    # Clean up: strip leading "+" if present, trim spaces
+    gsub(/^[ \t]*\+?[ \t]*/, "", key_combo);
+    gsub(/[ \t]+$/, "", key_combo);
+
+    # Reconstruct the command from the remaining fields
+    action = "";
+    for (i = 3; i <= NF; i++) {
+        action = action $i (i < NF ? "," : "");
+    }
+
+    # Clean up trailing commas, remove leading "exec, ", and trim
+    sub(/,$/, "", action);
+    gsub(/(^|,)[[:space:]]*exec[[:space:]]*,?/, "", action);
+    gsub(/^[ \t]+|[ \t]+$/, "", action);
+    gsub(/[ \t]+/, " ", key_combo);  # Collapse multiple spaces to one
+
+    if (action != "") {
+        printf "%-35s → %s\n", key_combo, action;
+    }
+}' | sort | uniq)
+
+# Show keybindings in wofi
 if command -v wofi &> /dev/null; then
-    echo "$BINDINGS" | ~/.config/hypr/scripts/wofi-launcher --dmenu --prompt "Keybindings" --width 800 --height 600 --cache-file /dev/null
+    echo "$FORMATTED_BINDINGS" | ~/.config/hypr/scripts/wofi-launcher --dmenu --prompt "Hyprland Keybindings" --width 60% --height 70%
 else
     # Fallback to terminal output
     echo "=== Hyprland Keybindings ==="
-    echo "$BINDINGS"
+    echo "$FORMATTED_BINDINGS"
     echo ""
     echo "Press any key to exit..."
     read -n 1
