@@ -1,0 +1,416 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# qute-1pass - 1Password integration for qutebrowser
+# 
+# A modern userscript for qutebrowser that integrates with 1Password CLI v2
+# to autofill login credentials and handle TOTP codes.
+#
+# Features:
+# - Automatic display server detection (X11/Wayland)
+# - Smart form field detection
+# - TOTP support with clipboard integration
+# - Multiple fill modes (all, username-only, password-only, totp-only)
+# - Debug logging capability
+#
+# Dependencies:
+# - 1Password CLI v2 (op)
+# - jq
+# - wofi (Wayland) or rofi (X11)
+# - wl-clipboard (Wayland) or xclip (X11)
+#
+# Usage:
+# - Alt-p: Fill username and password
+# - Alt-Shift-p: Fill username only
+# - Alt-Ctrl-p: Fill password only  
+# - Alt-t: Copy TOTP to clipboard
+
+# Configuration
+readonly SCRIPT_NAME="qute-1pass"
+readonly CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/$SCRIPT_NAME"
+
+# Global variables
+USERNAME=""
+PASSWORD=""
+FILL_MODE="all"  # all, username, password, totp
+DEBUG="${DEBUG:-false}"
+
+# Display server detection
+if [ -n "${WAYLAND_DISPLAY:-}" ]; then
+    DMENU_CMD="wofi --dmenu --insensitive"
+    DMENU_PASS_CMD="wofi --dmenu --password"
+    CLIP_CMD="wl-copy"
+else
+    DMENU_CMD="rofi -dmenu -i"
+    DMENU_PASS_CMD="rofi -dmenu -password"
+    CLIP_CMD="xclip -selection clipboard"
+fi
+
+DEBUG_LOG="/tmp/qute-1pass-debug.log"
+
+debug() {
+    if [ "$DEBUG" = "true" ]; then
+        echo "[DEBUG] $*" >&2
+        echo "[$(date '+%H:%M:%S')] $*" >> "$DEBUG_LOG"
+    fi
+}
+
+error() {
+    echo "message-error '$1'" >> "$QUTE_FIFO"
+    exit 1
+}
+
+info() {
+    echo "message-info '$1'" >> "$QUTE_FIFO"
+}
+
+check_dependencies() {
+    local deps=("op" "jq")
+    
+    # Check display server specific dependencies
+    if [ -n "${WAYLAND_DISPLAY:-}" ]; then
+        deps+=("wofi" "wl-copy")
+    else
+        deps+=("rofi" "xclip")
+    fi
+    
+    for dep in "${deps[@]}"; do
+        if ! command -v "$dep" &> /dev/null; then
+            debug "Missing dependency: $dep"
+            error "Missing dependency: $dep"
+        else
+            debug "Found dependency: $dep at $(which $dep)"
+        fi
+    done
+}
+
+check_qutebrowser_env() {
+    if [ -z "${QUTE_FIFO:-}" ] || [ -z "${QUTE_URL:-}" ]; then
+        echo "Error: This script must be run as a qutebrowser userscript" >&2
+        exit 1
+    fi
+}
+
+parse_args() {
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --username-only) FILL_MODE="username" ;;
+            --password-only) FILL_MODE="password" ;;
+            --totp-only) FILL_MODE="totp" ;;
+            --help) show_help ;;
+            --debug) DEBUG="true" ;;
+            *) error "Unknown option: $1" ;;
+        esac
+        shift
+    done
+}
+
+show_help() {
+    cat << EOF
+Usage: $SCRIPT_NAME [OPTIONS]
+
+Options:
+    --username-only    Fill only the username field
+    --password-only    Fill only the password field  
+    --totp-only       Copy only the TOTP to clipboard
+    --debug           Enable debug output
+    --help            Show this help message
+
+This script requires 1Password CLI v2 to be installed and signed in.
+Run 'op signin' before using this script.
+EOF
+    exit 0
+}
+
+extract_domain() {
+    local url="$1"
+    # Extract domain, removing protocol and path
+    local domain
+    domain=$(echo "$url" | sed -E 's|^[^:]*://||; s|/.*||; s|:.*||')
+    # Remove www. prefix
+    domain="${domain#www.}"
+    echo "$domain"
+}
+
+check_op_signin() {
+    debug "Checking 1Password signin status..."
+    if ! op vault list &>/dev/null; then
+        debug "op vault list failed with exit code: $?"
+        error "Not signed in to 1Password. Please run: op signin"
+    else
+        debug "Successfully connected to 1Password"
+    fi
+}
+
+find_matching_items() {
+    local domain="$1"
+    local items
+    
+    debug "Searching for items matching domain: $domain"
+    
+    # Get all items with URLs
+    items=$(op item list --format json 2>/dev/null || echo "[]")
+    debug "Found $(echo "$items" | jq 'length') total items in 1Password"
+    
+    # Try exact domain match first
+    local matches
+    matches=$(echo "$items" | jq --arg domain "$domain" -r '
+        [.[] | select(.urls[]?.href | test("(?i)" + $domain))] | 
+        sort_by(.updated_at) | reverse
+    ')
+    
+    debug "Found $(echo "$matches" | jq 'length') items matching domain $domain"
+    
+    echo "$matches"
+}
+
+select_item() {
+    local items="$1"
+    local count
+    count=$(echo "$items" | jq 'length')
+    
+    if [ "$count" -eq 0 ]; then
+        # No automatic match, let user browse all items
+        local all_items
+        all_items=$(op item list --format json | jq -r '.[].title' | sort)
+        local selected
+        selected=$(echo "$all_items" | $DMENU_CMD -p "Select 1Password item:") || return 1
+        
+        # Get UUID of selected item
+        op item list --format json | jq --arg title "$selected" -r '.[] | select(.title == $title).id // empty'
+    elif [ "$count" -eq 1 ]; then
+        # Single match, use it
+        echo "$items" | jq -r '.[0].id'
+    else
+        # Multiple matches, let user choose
+        local titles
+        titles=$(echo "$items" | jq -r '.[].title')
+        local selected
+        selected=$(echo "$titles" | $DMENU_CMD -p "Select account:") || return 1
+        echo "$items" | jq --arg title "$selected" -r '.[] | select(.title == $title).id // empty'
+    fi
+}
+
+get_item_details() {
+    local uuid="$1"
+    op item get "$uuid" --format json 2>/dev/null
+}
+
+extract_credentials() {
+    local item="$1"
+    
+    USERNAME=$(echo "$item" | jq -r '
+        .fields[] | 
+        select(.purpose == "USERNAME" or .label == "username" or .label == "email") | 
+        .value // empty
+    ' | head -1)
+    
+    PASSWORD=$(echo "$item" | jq -r '
+        .fields[] | 
+        select(.purpose == "PASSWORD" or .type == "CONCEALED") | 
+        .value // empty
+    ' | head -1)
+    
+    debug "Found username: ${USERNAME:-(empty)}"
+    debug "Found password: ${PASSWORD:+[hidden]}"
+}
+
+javascript_escape() {
+    local input="$1"
+    # Escape backslashes first, then quotes and other special chars
+    echo "$input" | sed 's/\\/\\\\/g; s/"/\\"/g; s/'\''/\\'\''/g; s/\//\\\//g; s/\n/\\n/g; s/\r/\\r/g; s/\t/\\t/g'
+}
+
+inject_credentials() {
+    local escaped_username escaped_password escaped_url
+    escaped_username=$(javascript_escape "${USERNAME:-}")
+    escaped_password=$(javascript_escape "${PASSWORD:-}")
+    escaped_url=$(javascript_escape "$QUTE_URL")
+    
+    # Generate JavaScript code inline, properly formatted for qutebrowser
+    printjs() {
+        cat << EOF | sed 's,//.*$,,' | tr '\n' ' '
+(function() {
+    const currentUrl = window.location.href;
+    const scriptUrl = "$escaped_url";
+    
+    if (currentUrl !== scriptUrl) {
+        alert('URL mismatch. Credentials will not be filled.');
+        return;
+    }
+    
+    function isVisible(elem) {
+        if (!elem) return false;
+        const style = window.getComputedStyle(elem);
+        return style.visibility !== 'hidden' && 
+               style.display !== 'none' && 
+               style.opacity !== '0' &&
+               elem.offsetWidth > 0 && 
+               elem.offsetHeight > 0;
+    }
+    
+    function fillField(field, value) {
+        if (!field || !value) return;
+        field.focus();
+        field.value = value;
+        field.dispatchEvent(new Event('input', { bubbles: true }));
+        field.dispatchEvent(new Event('change', { bubbles: true }));
+        field.blur();
+    }
+    
+    let filled = false;
+    let filledUsername = false;
+    let filledPassword = false;
+    
+    // First, try to find all visible password fields on the page
+    const allPasswordFields = document.querySelectorAll('input[type="password"]');
+    const visiblePasswordFields = Array.from(allPasswordFields).filter(isVisible);
+    
+    // Fill password fields
+    if ("$FILL_MODE" === "all" || "$FILL_MODE" === "password") {
+        visiblePasswordFields.forEach(field => {
+            fillField(field, "$escaped_password");
+            filledPassword = true;
+        });
+    }
+    
+    // Find username fields - look for visible text/email/tel inputs that come before password fields
+    if ("$FILL_MODE" === "all" || "$FILL_MODE" === "username") {
+        // Strategy 1: Look within the same form as password fields
+        visiblePasswordFields.forEach(passField => {
+            const form = passField.closest('form');
+            if (form && !filledUsername) {
+                const inputs = form.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"]');
+                for (let input of inputs) {
+                    if (isVisible(input)) {
+                        fillField(input, "$escaped_username");
+                        filledUsername = true;
+                        break;
+                    }
+                }
+            }
+        });
+        
+        // Strategy 2: If no form or username not filled, look for any visible username-like field
+        if (!filledUsername) {
+            const usernameFields = document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"]');
+            for (let field of usernameFields) {
+                if (isVisible(field)) {
+                    fillField(field, "$escaped_username");
+                    filledUsername = true;
+                    break;
+                }
+            }
+        }
+    }
+    
+    filled = filledUsername || filledPassword;
+    return filled;
+})();
+EOF
+    }
+    
+    local js_command="jseval -q $(printjs)"
+    debug "Sending JavaScript command to qutebrowser (length: ${#js_command})"
+    echo "$js_command" >> "$QUTE_FIFO"
+    debug "JavaScript injection completed"
+}
+
+handle_totp() {
+    local uuid="$1"
+    local item_title="$2"
+    
+    local totp
+    totp=$(op item get "$uuid" --otp 2>/dev/null) || return 1
+    
+    if [ -n "$totp" ]; then
+        echo "$totp" | $CLIP_CMD
+        info "Copied TOTP for $item_title to clipboard"
+        return 0
+    else
+        return 1
+    fi
+}
+
+main() {
+    # Initialize debug log only if debug mode is enabled
+    if [ "$DEBUG" = "true" ]; then
+        echo "=== qute-1pass started at $(date) ===" > "$DEBUG_LOG"
+        debug "QUTE_URL: $QUTE_URL"
+        debug "QUTE_FIFO: $QUTE_FIFO"
+        debug "WAYLAND_DISPLAY: ${WAYLAND_DISPLAY:-not set}"
+        debug "Script args: $*"
+    fi
+    
+    check_dependencies
+    check_qutebrowser_env
+    parse_args "$@"
+    
+    # Initialize cache directory
+    mkdir -p "$CACHE_DIR"
+    
+    local domain
+    domain=$(extract_domain "$QUTE_URL")
+    debug "Extracted domain: $domain"
+    info "Looking for credentials for $domain..."
+    
+    check_op_signin
+    
+    # Find matching items
+    local items
+    items=$(find_matching_items "$domain")
+    
+    # Select item
+    local uuid
+    uuid=$(select_item "$items")
+    
+    if [ -z "$uuid" ]; then
+        error "No item selected"
+    fi
+    
+    # Get full item details
+    local item
+    item=$(get_item_details "$uuid")
+    
+    if [ -z "$item" ]; then
+        error "Failed to retrieve item details"
+    fi
+    
+    local title
+    title=$(echo "$item" | jq -r '.title // "Unknown"')
+    
+    # Handle TOTP-only mode
+    if [ "$FILL_MODE" = "totp" ]; then
+        if handle_totp "$uuid" "$title"; then
+            exit 0
+        else
+            error "No TOTP found for $title"
+        fi
+    fi
+    
+    # Extract credentials
+    extract_credentials "$item"
+    
+    # Check if we have the required credentials
+    if [ "$FILL_MODE" = "password" ] && [ -z "$PASSWORD" ]; then
+        error "No password found for $title"
+    elif [ "$FILL_MODE" = "username" ] && [ -z "$USERNAME" ]; then
+        error "No username found for $title"
+    elif [ "$FILL_MODE" = "all" ] && [ -z "$PASSWORD" ]; then
+        error "No password found for $title"
+    fi
+    
+    # Inject credentials
+    inject_credentials
+    
+    # Handle TOTP if in 'all' mode and available
+    if [ "$FILL_MODE" = "all" ]; then
+        handle_totp "$uuid" "$title" || true
+    fi
+    
+    info "Filled credentials for $title"
+}
+
+# Run main function
+main "$@"
