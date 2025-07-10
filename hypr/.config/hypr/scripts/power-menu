@@ -4,7 +4,7 @@
 OPTIONS="󰌾 Lock\n󰶐 Display Off\n󰍃 Logout\n󰜉 Restart\n󰐥 Power Off"
 
 # Get the selected option
-SELECTED=$(echo -e "$OPTIONS" | wofi --dmenu --prompt "Power Menu" --width 400 --height 400 --lines 5 --cache-file /dev/null --style ~/.config/hypr/scripts/power-menu-style.css)
+SELECTED=$(echo -e "$OPTIONS" | ~/.config/hypr/scripts/wofi-launcher --dmenu --prompt "Power Menu" --width 400 --lines 6 --cache-file /dev/null --style ~/.config/hypr/scripts/power-menu-style.css)
 
 case $SELECTED in
     "󰌾 Lock")

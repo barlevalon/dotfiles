@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Check if wofi is already running
+if pgrep -x wofi > /dev/null; then
+    # Kill existing wofi instance
+    pkill -x wofi
+else
+    # Launch wofi with any arguments passed to this script
+    wofi "$@"
+fi

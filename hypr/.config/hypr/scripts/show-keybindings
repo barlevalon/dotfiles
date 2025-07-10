@@ -8,7 +8,7 @@ BINDINGS=$(grep -E "^bind[[:space:]]*=" ~/.config/hypr/bindings.conf | \
 
 # Show keybindings in a notification or terminal
 if command -v wofi &> /dev/null; then
-    echo "$BINDINGS" | wofi --dmenu --prompt "Keybindings" --width 800 --height 600 --cache-file /dev/null
+    echo "$BINDINGS" | ~/.config/hypr/scripts/wofi-launcher --dmenu --prompt "Keybindings" --width 800 --height 600 --cache-file /dev/null
 else
     # Fallback to terminal output
     echo "=== Hyprland Keybindings ==="
