@@ -3,6 +3,9 @@ if not status is-interactive && test "$CI" != true
     exit
 end
 
+# FZF theme configuration (Catppuccin Macchiato)
+set -gx FZF_DEFAULT_OPTS "--color=bg+:#363a4f,bg:#24273a,spinner:#f4dbd6,hl:#ed8796 --color=fg:#cad3f5,header:#ed8796,info:#c6a0f6,pointer:#f4dbd6 --color=marker:#f4dbd6,fg+:#cad3f5,prompt:#c6a0f6,hl+:#ed8796"
+
 # Because of scoping rules, to capture the shell variables exactly as they are, we must read
 # them before even executing _fzf_search_variables. We use psub to store the
 # variables' info in temporary files and pass in the filenames as arguments.
