@@ -25,3 +25,6 @@ config.bind('<Alt-p>', 'spawn --userscript qute-1pass')
 config.bind('<Alt-Shift-p>', 'spawn --userscript qute-1pass --username-only')
 config.bind('<Alt-Ctrl-p>', 'spawn --userscript qute-1pass --password-only')
 config.bind('<Alt-t>', 'spawn --userscript qute-1pass --totp-only')
+
+# Dark mode toggle keybinding
+config.bind('<Alt-d>', 'config-cycle colors.webpage.darkmode.enabled true false')
