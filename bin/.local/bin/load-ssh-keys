@@ -42,5 +42,5 @@ save_key "sage mac" "sage_mac_ed25519"  # Your other ED25519 key
 # Add more keys as needed
 
 echo ""
-echo "Keys loaded. You can now use standard ssh-agent."
-echo "Run 'ssh-add' to add keys to your agent."
+echo "Keys loaded to ~/.ssh/"
+echo "Keychain will automatically add them to the SSH agent on next shell."
