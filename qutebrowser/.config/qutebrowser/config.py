@@ -1,7 +1,7 @@
 config.load_autoconfig()
 
 c.tabs.position = "top"
-c.tabs.show = "always"
+c.tabs.show = "multiple"
 c.fonts.default_size = "20pt"
 
 c.auto_save.session = True
