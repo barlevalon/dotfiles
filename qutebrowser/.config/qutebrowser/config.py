@@ -4,7 +4,7 @@ c.tabs.position = "top"
 c.tabs.show = "multiple"
 c.fonts.default_size = "20pt"
 
-c.auto_save.session = True
+c.auto_save.session = False
 c.input.insert_mode.auto_load = True
 
 en_keys = "qwertyuiopasdfghjkl'zxcvbnm,./"
