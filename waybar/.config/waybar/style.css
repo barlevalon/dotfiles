@@ -23,9 +23,20 @@
 #bluetooth,
 #pulseaudio,
 #clock,
-#custom-power-menu {
+#custom-power-menu,
+#tray {
   min-width: 12px;
   margin-right: 13px;
+}
+
+#custom-expand-icon {
+  margin-right: 12px;
+  color: #cdd6f4;
+  opacity: 0.8;
+}
+
+#custom-expand-icon:hover {
+  opacity: 1.0;
 }
 
 tooltip {
