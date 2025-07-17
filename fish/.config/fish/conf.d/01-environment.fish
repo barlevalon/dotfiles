@@ -6,3 +6,6 @@ set -gx SHELL /usr/bin/fish
 
 # XDG Base Directory
 set -Ux XDG_CONFIG_HOME $HOME/.config
+
+# EDITOR
+set -Ux EDITOR /usr/bin/nvim
