@@ -1,2 +1,2 @@
 # Claude CLI alias
-alias claude="/home/alon/.claude/local/claude"
+alias claude="$HOME/.claude/local/claude"
