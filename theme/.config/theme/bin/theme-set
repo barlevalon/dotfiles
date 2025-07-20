@@ -1,0 +1,166 @@
+#!/bin/bash
+set -euo pipefail
+
+# theme-set: Set a theme, specified by its name.
+# Usage: theme-set <theme-name>
+
+if [[ -z "${1:-}" ]]; then
+  echo "Usage: theme-set <theme-name>" >&2
+  exit 1
+fi
+
+THEME_NAME="$1"
+THEME_BASE_DIR="$HOME/.config/theme"
+ALL_THEMES_DIR="$THEME_BASE_DIR/themes"
+SELECTED_THEME_SOURCE="$ALL_THEMES_DIR/$THEME_NAME"
+CURRENT_THEME_SYMLINK="$THEME_BASE_DIR/current/theme"
+
+# Check if the theme exists
+if [[ ! -d "$SELECTED_THEME_SOURCE" ]]; then
+  echo "Theme '$THEME_NAME' does not exist in $ALL_THEMES_DIR" >&2
+  exit 2
+fi
+
+# Create current directory if it doesn't exist
+mkdir -p "$(dirname "$CURRENT_THEME_SYMLINK")"
+
+# Update theme symlinks
+ln -nsf "$SELECTED_THEME_SOURCE" "$CURRENT_THEME_SYMLINK"
+
+# Write current theme name to file
+echo "$THEME_NAME" > "$THEME_BASE_DIR/current_theme"
+
+# Change gnome modes if light.mode exists
+update_gnome_theme() {
+  if [[ -f "$CURRENT_THEME_SYMLINK/light.mode" ]]; then
+    gsettings set org.gnome.desktop.interface color-scheme "prefer-light" 2>/dev/null || true
+    gsettings set org.gnome.desktop.interface gtk-theme "Adwaita" 2>/dev/null || true
+  else
+    gsettings set org.gnome.desktop.interface color-scheme "prefer-dark" 2>/dev/null || true
+    gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-dark" 2>/dev/null || true
+  fi
+}
+
+# Update btop theme
+update_btop_theme() {
+  if [[ -f "$CURRENT_THEME_SYMLINK/btop.theme" ]]; then
+    ln -nsf "$CURRENT_THEME_SYMLINK/btop.theme" "$HOME/.config/btop/themes/current.theme"
+  fi
+  # Trigger btop config reload
+  pkill -SIGUSR2 btop 2>/dev/null || true
+}
+
+# Restart UI components
+restart_ui_components() {
+  # Restart waybar
+  pkill waybar 2>/dev/null || true
+  setsid waybar >/dev/null 2>&1 &
+  
+  # Reload mako and hyprland
+  makoctl reload 2>/dev/null || true
+  hyprctl reload 2>/dev/null || true
+  
+  # Kill wofi to force it to reload theme on next launch
+  pkill wofi 2>/dev/null || true
+}
+
+# Update starship theme
+update_starship_theme() {
+  local theme_file="$CURRENT_THEME_SYMLINK/starship.toml"
+  local config_file="$HOME/.config/starship.toml"
+  
+  [[ ! -f "$theme_file" ]] || [[ ! -f "$config_file" ]] && return
+  
+  # Extract the palette line from theme's starship.toml
+  local palette_line
+  palette_line=$(grep "^palette = " "$theme_file" | head -1) || return
+  [[ -z "$palette_line" ]] && return
+  
+  # Update or add palette line in main config
+  if grep -q "^palette = " "$config_file"; then
+    sed -i "s/^palette = .*/$palette_line/" "$config_file"
+  else
+    sed -i "/^command_timeout/a $palette_line" "$config_file"
+  fi
+  
+  # Update palette definitions if present
+  if grep -q "^\[palettes\." "$theme_file"; then
+    local palette_name
+    palette_name=$(echo "$palette_line" | sed 's/palette = "\(.*\)"/\1/')
+    
+    # Remove old palette definition
+    sed -i "/^\[palettes\.$palette_name\]/,/^\[/{/^\[palettes\.$palette_name\]/d;/^\[/!d;}" "$config_file"
+    
+    # Append new palette definitions
+    echo "" >> "$config_file"
+    grep -A 1000 "^\[palettes\." "$theme_file" >> "$config_file"
+  fi
+}
+
+# Update lazygit theme
+update_lazygit_theme() {
+  local theme_file="$CURRENT_THEME_SYMLINK/lazygit.yml"
+  local config_dir="$HOME/.config/lazygit"
+  local config_file="$config_dir/config.yml"
+  
+  [[ ! -f "$theme_file" ]] && return
+  command -v lazygit >/dev/null 2>&1 || return
+  
+  # Ensure config directory exists
+  mkdir -p "$config_dir"
+  
+  # Create a base config file if it doesn't exist or is empty
+  if [[ ! -s "$config_file" ]]; then
+    cat > "$config_file" << 'EOF'
+# Include theme configuration
+# This file is automatically updated by the theme system
+# Do not manually edit the theme section below
+EOF
+  fi
+  
+  # Extract non-theme config and append new theme
+  awk '/^gui:/{exit} {print}' "$config_file" > "$config_file.tmp"
+  cat "$theme_file" >> "$config_file.tmp"
+  mv "$config_file.tmp" "$config_file"
+}
+
+# Reload tmux configuration
+reload_tmux() {
+  if [[ -n "${TMUX:-}" ]] || pgrep -x tmux >/dev/null 2>&1; then
+    tmux source-file "$HOME/.config/tmux/tmux.conf" 2>/dev/null || true
+  fi
+}
+
+# Set new background
+set_background() {
+  local bg_dir="$CURRENT_THEME_SYMLINK/backgrounds"
+  [[ ! -d "$bg_dir" ]] && return
+  
+  # Get first background file (sorted for consistency)
+  local bg_file
+  bg_file=$(find "$bg_dir" -type f \( -name "*.jpg" -o -name "*.png" -o -name "*.jpeg" \) | sort | head -1)
+  [[ -z "$bg_file" ]] && return
+  
+  # Create symlink for autostart
+  ln -nsf "$bg_file" "$THEME_BASE_DIR/background.jpg"
+  
+  # Restart swaybg
+  pkill -x swaybg 2>/dev/null || true
+  setsid swaybg -i "$bg_file" -m fill >/dev/null 2>&1 &
+}
+
+# Apply all theme changes
+update_gnome_theme
+update_btop_theme
+restart_ui_components
+update_starship_theme
+update_lazygit_theme
+reload_tmux
+set_background
+
+echo "Theme '$THEME_NAME' applied successfully"
+
+# Notify about fish reload if fish config exists
+if [[ -f "$CURRENT_THEME_SYMLINK/fish.conf" ]]; then
+  echo "Note: Run 'theme-reload' in existing fish shells to update colors"
+fi

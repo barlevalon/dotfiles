@@ -1,0 +1,22 @@
+# Matte Black theme starship configuration
+palette = "matte_black"
+
+[palettes.matte_black]
+# Background colors
+bg = "#121212"
+bg_light = "#333333"
+# Foreground colors
+fg = "#bebebe"
+fg_bright = "#eaeaea"
+fg_dim = "#8a8a8d"
+# Accent colors
+red = "#D35F5F"
+red_bright = "#B91C1C"
+orange = "#e68e0d"
+orange_bright = "#f59e0b"
+yellow = "#FFC107"
+yellow_dim = "#b91c1c"
+yellow_alt = "#b90a0a"
+white = "#bebebe"
+white_bright = "#ffffff"
+gray = "#8a8a8d"

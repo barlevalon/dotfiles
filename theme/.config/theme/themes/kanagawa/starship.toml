@@ -1,0 +1,27 @@
+# Kanagawa theme starship configuration
+palette = "kanagawa"
+
+[palettes.kanagawa]
+# Background colors
+sumiInk0 = "#16161D"
+sumiInk1 = "#1F1F28"
+sumiInk2 = "#2A2A37"
+sumiInk3 = "#363646"
+sumiInk4 = "#54546D"
+# Foreground colors
+fujiWhite = "#DCD7BA"
+oldWhite = "#C8C093"
+# Main colors
+sakuraPink = "#D27E99"
+oniViolet = "#957FB8"
+crystalBlue = "#7E9CD8"
+springGreen = "#98BB6C"
+boatYellow1 = "#938AA9"
+boatYellow2 = "#DCA561"
+carpYellow = "#E6C384"
+waveRed = "#E46876"
+peachRed = "#FF5D62"
+surimiOrange = "#FFA066"
+autumnRed = "#C34043"
+autumnGreen = "#76946A"
+autumnYellow = "#DCA561"

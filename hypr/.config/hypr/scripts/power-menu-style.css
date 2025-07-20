@@ -1,5 +1,6 @@
-@import "/home/alon/.config/theme/wofi.css";
+@import "/home/alon/.config/wofi/style.css";
 
+/* Power menu specific overrides */
 * {
   font-size: 24px !important;
 }
@@ -12,8 +13,4 @@
 #text {
   font-size: 24px !important;
   margin: 5px 10px;
-}
-
-window {
-  padding: 20px;
 }
