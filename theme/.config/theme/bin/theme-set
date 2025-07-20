@@ -128,6 +128,11 @@ EOF
 reload_tmux() {
   if [[ -n "${TMUX:-}" ]] || pgrep -x tmux >/dev/null 2>&1; then
     tmux source-file "$HOME/.config/tmux/tmux.conf" 2>/dev/null || true
+    # Update FZF_DEFAULT_OPTS in tmux environment if fzf theme exists
+    if [[ -f "$CURRENT_THEME_SYMLINK/fzf.conf" ]]; then
+      local fzf_opts=$(cat "$CURRENT_THEME_SYMLINK/fzf.conf")
+      tmux set-environment FZF_DEFAULT_OPTS "$fzf_opts" 2>/dev/null || true
+    fi
   fi
 }
 

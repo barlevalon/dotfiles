@@ -7,3 +7,8 @@ end
 if test -f ~/.config/theme/current/theme/bat.conf
     set -gx BAT_THEME (cat ~/.config/theme/current/theme/bat.conf)
 end
+
+# Set fzf theme
+if test -f ~/.config/theme/current/theme/fzf.conf
+    set -gx FZF_DEFAULT_OPTS (cat ~/.config/theme/current/theme/fzf.conf)
+end
