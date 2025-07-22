@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# Check if our specific wofi instance is running
+if pgrep -f "wofi.*Qutebrowser" > /dev/null; then
+    # Our qb-fuzzy-search wofi is running, kill it (toggle off)
+    pkill -x wofi
+    exit 0
+fi
+
+# Kill any other wofi instance that might be running
+pkill -x wofi 2>/dev/null
+
 # Temporary file for entries
 TEMP_FILE=$(mktemp)
 trap "rm -f $TEMP_FILE" EXIT

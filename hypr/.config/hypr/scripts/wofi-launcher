@@ -1,10 +1,14 @@
 #!/bin/bash
 
-# Check if wofi is already running
-if pgrep -x wofi > /dev/null; then
-    # Kill existing wofi instance
+# Check if our specific wofi instance is running (look for the actual wofi process with --show)
+if pgrep -f "^wofi --show drun" > /dev/null; then
+    # Our app launcher wofi is running, kill it (toggle off)
     pkill -x wofi
-else
-    # Launch wofi with any arguments passed to this script
-    wofi "$@"
+    exit 0
 fi
+
+# Kill any other wofi instance that might be running
+pkill -x wofi 2>/dev/null
+
+# Launch wofi with any arguments passed to this script
+wofi "$@"
