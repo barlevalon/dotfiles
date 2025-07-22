@@ -1,8 +1,26 @@
 #!/bin/bash
 
-# Temporary file to store all entries
+# Temporary file for entries
 TEMP_FILE=$(mktemp)
 trap "rm -f $TEMP_FILE" EXIT
+
+# Fixed session file location
+SESSION_FILE="/tmp/qb-fuzzy-search-session.yml"
+
+# Save current session if qutebrowser is running
+if pgrep -x qutebrowser > /dev/null; then
+    qutebrowser ":session-save --quiet $SESSION_FILE" 2>/dev/null
+    
+    # Parse session file for open tabs
+    if [ -f "$SESSION_FILE" ]; then
+        # Parse with yq (go version)
+        yq eval '.windows[].tabs[] as $tab | 
+            $tab.history[] | 
+            select(.active == true and .url != null and .url != "about:blank") | 
+            (select($tab.active) | "[TAB*] " + (.title // .url) + " - " + .url) // 
+            (select($tab.active | not) | "[TAB] " + (.title // .url) + " - " + .url)' "$SESSION_FILE" >> "$TEMP_FILE" 2>/dev/null
+    fi
+fi
 
 # Add quickmarks if file exists
 if [ -f ~/.config/qutebrowser/quickmarks ]; then
@@ -48,8 +66,15 @@ SELECTED=$(cat "$TEMP_FILE" | wofi --dmenu --prompt "Search QB History/Bookmarks
 # Exit if nothing selected
 [ -z "$SELECTED" ] && exit 0
 
-# Check if this is a quickmark
-if [[ "$SELECTED" =~ ^\[QM\] ]]; then
+# Check what type of entry was selected
+if [[ "$SELECTED" =~ ^\[TAB\*?\] ]]; then
+    # This is an open tab - extract URL and focus it
+    URL=$(echo "$SELECTED" | sed 's/.* - //')
+    
+    # Use tab-select with URL pattern to focus the tab
+    qutebrowser ":tab-select $URL"
+    
+elif [[ "$SELECTED" =~ ^\[QM\] ]]; then
     # Extract quickmark name (between [QM] and -)
     QM_NAME=$(echo "$SELECTED" | sed 's/^\[QM\] \([^ ]*\) - .*/\1/')
     
@@ -62,7 +87,7 @@ if [[ "$SELECTED" =~ ^\[QM\] ]]; then
         qutebrowser --target tab ":quickmark-load $QM_NAME"
     fi
 else
-    # Not a quickmark, extract URL normally
+    # Not a quickmark or tab, extract URL normally
     URL=$(echo "$SELECTED" | sed 's/.* - //')
     
     # Check if URL is valid
