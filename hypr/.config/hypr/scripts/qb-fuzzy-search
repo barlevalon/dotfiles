@@ -61,7 +61,7 @@ if [ ! -s "$TEMP_FILE" ]; then
 fi
 
 # Use wofi to select an entry
-SELECTED=$(cat "$TEMP_FILE" | wofi --dmenu --prompt "Search QB History/Bookmarks" --cache-file /dev/null)
+SELECTED=$(cat "$TEMP_FILE" | wofi --dmenu --prompt "Qutebrowser" --cache-file /dev/null)
 
 # Exit if nothing selected
 [ -z "$SELECTED" ] && exit 0
