@@ -1,0 +1,82 @@
+#!/bin/bash
+
+# Temporary file to store all entries
+TEMP_FILE=$(mktemp)
+trap "rm -f $TEMP_FILE" EXIT
+
+# Add quickmarks if file exists
+if [ -f ~/.config/qutebrowser/quickmarks ]; then
+    while IFS=' ' read -r name url; do
+        echo "[QM] $name - $url" >> "$TEMP_FILE"
+    done < ~/.config/qutebrowser/quickmarks
+fi
+
+# Add bookmarks if file exists
+if [ -f ~/.config/qutebrowser/bookmarks ]; then
+    while IFS=' ' read -r url title; do
+        # Bookmarks format is "url title"
+        # Add https:// if no protocol specified
+        if [[ ! "$url" =~ ^https?:// && ! "$url" =~ ^file:// && ! "$url" =~ ^about: ]]; then
+            url="https://$url"
+        fi
+        echo "[BM] ${title:-$url} - $url" >> "$TEMP_FILE"
+    done < ~/.config/qutebrowser/bookmarks
+fi
+
+# Add history from SQLite database
+if [ -f ~/.local/share/qutebrowser/history.sqlite ]; then
+    # Get last 500 unique URLs from history, ordered by most recent
+    sqlite3 ~/.local/share/qutebrowser/history.sqlite \
+        "SELECT DISTINCT url, title FROM CompletionHistory ORDER BY last_atime DESC LIMIT 500" \
+        | while IFS='|' read -r url title; do
+            # Skip empty URLs
+            [ -z "$url" ] && continue
+            # Use URL as title if title is empty
+            echo "[H] ${title:-$url} - $url" >> "$TEMP_FILE"
+        done
+fi
+
+# Check if we have any entries
+if [ ! -s "$TEMP_FILE" ]; then
+    notify-send "QB Fuzzy Search" "No bookmarks, quickmarks, or history found"
+    exit 1
+fi
+
+# Use wofi to select an entry
+SELECTED=$(cat "$TEMP_FILE" | wofi --dmenu --prompt "Search QB History/Bookmarks" --cache-file /dev/null)
+
+# Exit if nothing selected
+[ -z "$SELECTED" ] && exit 0
+
+# Check if this is a quickmark
+if [[ "$SELECTED" =~ ^\[QM\] ]]; then
+    # Extract quickmark name (between [QM] and -)
+    QM_NAME=$(echo "$SELECTED" | sed 's/^\[QM\] \([^ ]*\) - .*/\1/')
+    
+    # Open quickmark in qutebrowser
+    if pgrep -x qutebrowser > /dev/null; then
+        # Qutebrowser is running, use quickmark-load in new tab
+        qutebrowser ":quickmark-load -t $QM_NAME"
+    else
+        # Qutebrowser not running, start it and load quickmark
+        qutebrowser --target tab ":quickmark-load $QM_NAME"
+    fi
+else
+    # Not a quickmark, extract URL normally
+    URL=$(echo "$SELECTED" | sed 's/.* - //')
+    
+    # Check if URL is valid
+    if [ -z "$URL" ] || [[ ! "$URL" =~ ^https?:// && ! "$URL" =~ ^file:// && ! "$URL" =~ ^about: ]]; then
+        notify-send "QB Fuzzy Search" "Invalid URL: $URL"
+        exit 1
+    fi
+    
+    # Open URL in qutebrowser
+    if pgrep -x qutebrowser > /dev/null; then
+        # Qutebrowser is running, open in new tab
+        qutebrowser ":open -t $URL"
+    else
+        # Qutebrowser not running, start it with URL in new tab
+        qutebrowser --target tab "$URL"
+    fi
+fi
