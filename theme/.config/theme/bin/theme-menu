@@ -21,8 +21,7 @@ mapfile -t themes < <(
 selection=$(printf '%s\n' "${themes[@]}" | wofi \
   --show dmenu \
   --allow-markup \
-  --width 150 \
-  --height 400 \
+  --width 250 \
   -O alphabetical \
   --prompt "Theme:" 2>/dev/null)
 

@@ -1,0 +1,48 @@
+#!/bin/bash
+set -euo pipefail
+
+# bg-next: Cycle to the next background for the current theme
+
+THEME_BASE_DIR="$HOME/.config/theme"
+CURRENT_THEME_DIR="$THEME_BASE_DIR/current/theme"
+BG_DIR="$CURRENT_THEME_DIR/backgrounds"
+STATE_FILE="$THEME_BASE_DIR/.current_bg_index"
+
+# Check if backgrounds directory exists
+if [[ ! -d "$BG_DIR" ]]; then
+  echo "No backgrounds directory for current theme" >&2
+  exit 1
+fi
+
+# Get all background files
+mapfile -t backgrounds < <(find -L "$BG_DIR" -type f \( -name "*.jpg" -o -name "*.png" -o -name "*.jpeg" \) | sort)
+
+# Check if any backgrounds exist
+if [[ ${#backgrounds[@]} -eq 0 ]]; then
+  echo "No backgrounds found in current theme" >&2
+  exit 1
+fi
+
+# Get current index
+current_index=0
+if [[ -f "$STATE_FILE" ]]; then
+  current_index=$(cat "$STATE_FILE" 2>/dev/null || echo 0)
+fi
+
+# Calculate next index
+next_index=$(( (current_index + 1) % ${#backgrounds[@]} ))
+
+# Get the background file
+bg_file="${backgrounds[$next_index]}"
+
+# Update background
+pkill -x swaybg 2>/dev/null || true
+uwsm app -- swaybg -i "$bg_file" -m fill >/dev/null 2>&1 &
+
+# Save current index
+echo "$next_index" > "$STATE_FILE"
+
+# Update the background.jpg symlink
+ln -nsf "$bg_file" "$THEME_BASE_DIR/background.jpg"
+
+echo "Switched to: $(basename "$bg_file")"

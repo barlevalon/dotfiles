@@ -24,8 +24,10 @@ fi
 # Create current directory if it doesn't exist
 mkdir -p "$(dirname "$CURRENT_THEME_SYMLINK")"
 
-# Update theme symlinks
-ln -nsf "$SELECTED_THEME_SOURCE" "$CURRENT_THEME_SYMLINK"
+# Update theme symlinks (use relative path)
+cd "$(dirname "$CURRENT_THEME_SYMLINK")"
+ln -nsf "../themes/$THEME_NAME" "$(basename "$CURRENT_THEME_SYMLINK")"
+cd - >/dev/null
 
 # Write current theme name to file
 echo "$THEME_NAME" > "$THEME_BASE_DIR/current_theme"
@@ -85,11 +87,8 @@ update_starship_theme() {
   
   # Update palette definitions if present
   if grep -q "^\[palettes\." "$theme_file"; then
-    local palette_name
-    palette_name=$(echo "$palette_line" | sed 's/palette = "\(.*\)"/\1/')
-    
-    # Remove old palette definition
-    sed -i "/^\[palettes\.$palette_name\]/,/^\[/{/^\[palettes\.$palette_name\]/d;/^\[/!d;}" "$config_file"
+    # Remove ALL existing palette definitions to avoid duplicates
+    sed -i '/^\[palettes\./,$d' "$config_file"
     
     # Append new palette definitions
     echo "" >> "$config_file"
@@ -126,12 +125,13 @@ EOF
 
 # Reload tmux configuration
 reload_tmux() {
-  if [[ -n "${TMUX:-}" ]] || pgrep -x tmux >/dev/null 2>&1; then
+  # Always update tmux if it's running, regardless of whether we're in a tmux session
+  if pgrep tmux >/dev/null 2>&1; then
     tmux source-file "$HOME/.config/tmux/tmux.conf" 2>/dev/null || true
     # Update FZF_DEFAULT_OPTS in tmux environment if fzf theme exists
     if [[ -f "$CURRENT_THEME_SYMLINK/fzf.conf" ]]; then
       local fzf_opts=$(cat "$CURRENT_THEME_SYMLINK/fzf.conf")
-      tmux set-environment FZF_DEFAULT_OPTS "$fzf_opts" 2>/dev/null || true
+      tmux set-environment -g FZF_DEFAULT_OPTS "$fzf_opts" 2>/dev/null || true
     fi
   fi
 }
@@ -143,7 +143,7 @@ set_background() {
   
   # Get first background file (sorted for consistency)
   local bg_file
-  bg_file=$(find "$bg_dir" -type f \( -name "*.jpg" -o -name "*.png" -o -name "*.jpeg" \) | sort | head -1)
+  bg_file=$(find -L "$bg_dir" -type f \( -name "*.jpg" -o -name "*.png" -o -name "*.jpeg" \) | sort | head -1)
   [[ -z "$bg_file" ]] && return
   
   # Create symlink for autostart
@@ -151,7 +151,24 @@ set_background() {
   
   # Restart swaybg
   pkill -x swaybg 2>/dev/null || true
-  setsid swaybg -i "$bg_file" -m fill >/dev/null 2>&1 &
+  uwsm app -- swaybg -i "$bg_file" -m fill >/dev/null 2>&1 &
+}
+
+# Reload neovim theme
+reload_neovim() {
+  # Find all neovim instances and send reload command
+  for nvim_socket in /tmp/nvim*.sock; do
+    if [[ -S "$nvim_socket" ]]; then
+      nvim --server "$nvim_socket" --remote-send ':ThemeReload<CR>' 2>/dev/null || true
+    fi
+  done
+  
+  # Also try using nvr if available
+  if command -v nvr >/dev/null 2>&1; then
+    nvr --serverlist | while read -r server; do
+      nvr --servername "$server" -c "ThemeReload" 2>/dev/null || true
+    done
+  fi
 }
 
 # Apply all theme changes
@@ -161,6 +178,7 @@ restart_ui_components
 update_starship_theme
 update_lazygit_theme
 reload_tmux
+reload_neovim
 set_background
 
 echo "Theme '$THEME_NAME' applied successfully"
