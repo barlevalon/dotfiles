@@ -171,6 +171,15 @@ reload_neovim() {
   fi
 }
 
+# Reload qutebrowser theme
+reload_qutebrowser() {
+  # Send config-source command to qutebrowser
+  if pgrep -x qutebrowser >/dev/null 2>&1; then
+    qutebrowser ":config-source" 2>/dev/null || true
+    echo "Reloaded qutebrowser config"
+  fi
+}
+
 # Apply all theme changes
 update_gnome_theme
 update_btop_theme
@@ -179,6 +188,7 @@ update_starship_theme
 update_lazygit_theme
 reload_tmux
 reload_neovim
+reload_qutebrowser
 set_background
 
 echo "Theme '$THEME_NAME' applied successfully"

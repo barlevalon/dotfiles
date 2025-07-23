@@ -1,5 +1,11 @@
 config.load_autoconfig()
 
+# Load theme from theme system
+import os
+theme_file = os.path.expanduser("~/.config/theme/current/theme/qutebrowser.py")
+if os.path.exists(theme_file):
+    config.source(theme_file)
+
 c.tabs.position = "top"
 c.tabs.show = "multiple"
 c.fonts.default_size = "20pt"
