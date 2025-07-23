@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fix WhatsApp Web Notifications
 // @description  Automatically clicks the notification button
-// @version      1.1
+// @version      1.4
 // @namespace    https://web.whatsapp.com/
 // @match        https://web.whatsapp.com/*
 // @run-at       document-end
@@ -11,9 +11,11 @@
 (function() {
     'use strict';
     
-    console.log('WhatsApp notification fix script loaded');
-    
     var attempts = 0;
+    var foundNotification = false;
+    var consecutiveEmptyAttempts = 0;
+    var clickedButtons = new Set();
+    
     var waitForButton = setInterval(function() {
         attempts++;
         
@@ -31,10 +33,13 @@
             document.querySelector('div[data-animate-modal-body="true"] div[role="button"]')
         ];
         
-        let button = buttons.find(b => b !== null && b !== undefined);
+        let button = buttons.find(b => b !== null && b !== undefined && !clickedButtons.has(b));
         
         if(button) {
-            console.log('Found notification button:', button);
+            // Mark as clicked immediately to prevent re-processing
+            clickedButtons.add(button);
+            foundNotification = true;
+            consecutiveEmptyAttempts = 0;
             
             // Find the actual clickable element (might be parent)
             let clickTarget = button;
@@ -42,24 +47,26 @@
                 clickTarget = clickTarget.parentElement;
             }
             
-            // Try to click
+            // Try to click immediately
             try {
                 clickTarget.click();
-                console.log('WhatsApp notification button clicked successfully');
-                clearInterval(waitForButton);
+                // Don't clear interval yet - let it check for more notifications
             } catch(e) {
-                console.log('Failed to click, trying direct event dispatch');
                 clickTarget.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
-                clearInterval(waitForButton);
             }
-        } else if (attempts % 20 === 0) {
-            console.log(`Still looking for notification button... (attempt ${attempts})`);
+        } else {
+            consecutiveEmptyAttempts++;
+            
+            // If we found a notification before and now haven't seen any for 3 attempts (1.5 seconds), stop
+            if (foundNotification && consecutiveEmptyAttempts >= 3) {
+                clearInterval(waitForButton);
+                return;
+            }
+        }
+        
+        // Stop after 15 seconds if we never found any notifications
+        if (attempts >= 30 && !foundNotification) {
+            clearInterval(waitForButton);
         }
     }, 500);
-    
-    // Stop trying after 60 seconds
-    setTimeout(function() {
-        clearInterval(waitForButton);
-        console.log('WhatsApp notification fix: Stopped looking for button after 60 seconds');
-    }, 60000);
 })();
