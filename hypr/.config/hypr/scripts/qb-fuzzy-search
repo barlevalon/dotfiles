@@ -93,8 +93,17 @@ elif [[ "$SELECTED" =~ ^\[QM\] ]]; then
         # Qutebrowser is running, use quickmark-load in new tab
         qutebrowser ":quickmark-load -t $QM_NAME"
     else
-        # Qutebrowser not running, start it and load quickmark
-        qutebrowser --target tab ":quickmark-load $QM_NAME"
+        # Qutebrowser not running, start it with the quickmark URL directly
+        # First get the URL from quickmarks file
+        QM_URL=$(grep "^$QM_NAME " ~/.config/qutebrowser/quickmarks | cut -d' ' -f2-)
+        if [ -n "$QM_URL" ]; then
+            # Add protocol if missing
+            [[ ! "$QM_URL" =~ ^https?:// ]] && QM_URL="https://$QM_URL"
+            qutebrowser "$QM_URL"
+        else
+            # Fallback if URL not found
+            qutebrowser
+        fi
     fi
 else
     # Not a quickmark or tab, extract URL normally
@@ -111,7 +120,7 @@ else
         # Qutebrowser is running, open in new tab
         qutebrowser ":open -t $URL"
     else
-        # Qutebrowser not running, start it with URL in new tab
-        qutebrowser --target tab "$URL"
+        # Qutebrowser not running, start it with URL
+        qutebrowser "$URL"
     fi
 fi
