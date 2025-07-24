@@ -1,0 +1,14 @@
+[window]
+anchor = "center"
+
+[ui.window.box]
+width = 300
+height = 300
+
+[ui.window.box.scroll.list]
+max_width = 300
+min_width = 300
+width = 300
+
+[ui.window.box.search]
+hide = true
