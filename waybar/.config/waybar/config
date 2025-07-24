@@ -74,7 +74,7 @@
       "format": "{icon}",
       "format-muted": "󰝟",
       "scroll-step": 2,
-      "on-click": "GTK_THEME=Adwaita-dark pavucontrol",
+      "on-click": "ghostty -e wiremix",
       "tooltip-format": "Playing at {volume}%",
       "on-click-right": "pamixer -t",
       "ignored-sinks": ["Easy Effects Sink"],
