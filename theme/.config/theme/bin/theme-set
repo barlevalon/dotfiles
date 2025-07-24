@@ -56,7 +56,7 @@ update_btop_theme() {
 restart_ui_components() {
   # Restart waybar
   pkill waybar 2>/dev/null || true
-  setsid waybar >/dev/null 2>&1 &
+  uwsm app -- waybar >/dev/null 2>&1 &
   
   # Reload mako and hyprland
   makoctl reload 2>/dev/null || true
