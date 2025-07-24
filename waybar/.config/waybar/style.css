@@ -14,6 +14,7 @@
   all: initial;
   padding: 2px 6px;
   margin-right: 3px;
+  min-width: 24px;
 }
 
 #cpu,
