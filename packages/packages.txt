@@ -133,12 +133,14 @@ unzip
 uwsm
 vivaldi
 waybar
+wf-recorder
 wget
 whois
 wiremix
 wireplumber
 wl-clip-persist
 wl-clipboard
+wl-screenrec
 wofi
 xdg-desktop-portal-gtk
 xdg-desktop-portal-hyprland
