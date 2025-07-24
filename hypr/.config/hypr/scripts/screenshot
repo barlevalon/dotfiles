@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Screenshot with satty for editing
+# Usage: screenshot [region|window|output]
+
+mode="${1:-region}"
+
+hyprshot -m "$mode" --raw | \
+  satty --filename - \
+    --output-filename ~/Pictures/screenshot-$(date +'%Y-%m-%d_%H-%M-%S').png \
+    --early-exit \
+    --copy-command 'wl-copy'
