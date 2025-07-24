@@ -64,6 +64,10 @@ restart_ui_components() {
   
   # Kill wofi to force it to reload theme on next launch
   pkill wofi 2>/dev/null || true
+  
+  # Restart SwayOSD to apply new theme
+  pkill swayosd-server 2>/dev/null || true
+  uwsm app -- swayosd-server >/dev/null 2>&1 &
 }
 
 # Update starship theme
