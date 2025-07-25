@@ -21,7 +21,7 @@ The theme system allows switching between color schemes dynamically:
 
 ### How it works
 1. Themes are stored in `theme/.config/theme/themes/`
-2. Each theme has config files for various apps (alacritty.toml, waybar.css, etc.)
+2. Each theme has config files for various apps (ghostty.conf, waybar.css, etc.)
 3. `~/.config/theme/current/theme` is a symlink to the active theme directory
 4. Apps import/source their theme config from the current theme
 5. `theme-set <theme-name>` switches themes and restarts affected apps
