@@ -19,6 +19,7 @@ clang
 cups
 cups-filters
 cups-pdf
+darktable
 docker
 docker-buildx
 docker-compose
@@ -69,6 +70,7 @@ lazygit
 less
 lib32-nvidia-utils
 libpulse
+libqalculate
 libva-nvidia-driver
 libva-utils
 linux
@@ -86,6 +88,7 @@ noto-fonts
 noto-fonts-cjk
 noto-fonts-emoji
 noto-fonts-extra
+ntfs-3g
 nvidia
 nvidia-settings
 nvidia-utils
@@ -132,6 +135,7 @@ ttf-meslo-nerd
 unzip
 uwsm
 vivaldi
+walker-bin
 waybar
 wf-recorder
 wget
