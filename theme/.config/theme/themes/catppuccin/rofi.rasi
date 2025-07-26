@@ -1,0 +1,97 @@
+* {
+    /* catppuccin colors from wofi theme */
+    background:     #24273a;
+    background-alt: #24273a;
+    foreground:     #c6d0f5;
+    selected:       #8caaee;
+    active:         #8caaee;
+    urgent:         #BF616A;
+    border-color:   #c6d0f5;
+    
+    /* Apply colors */
+    background-color: @background;
+    text-color: @foreground;
+    
+    /* Remove borders and padding */
+    border: 0;
+    margin: 0;
+    padding: 0;
+    spacing: 0;
+}
+
+window {
+    transparency: "real";
+    background-color: @background;
+    text-color: @foreground;
+    border: 2px;
+    border-color: @border-color;
+    border-radius: 0px;
+    width: 50%;
+    location: center;
+    anchor: center;
+}
+
+mainbox {
+    background-color: @background;
+    children: [ inputbar, listview ];
+    padding: 20px;
+}
+
+inputbar {
+    children: [ prompt, entry ];
+    background-color: @background;
+    text-color: @foreground;
+    padding: 10px;
+    margin: 0px 0px 10px 0px;
+}
+
+prompt {
+    background-color: @background;
+    text-color: @selected;
+    padding: 0px 10px 0px 0px;
+}
+
+entry {
+    background-color: @background;
+    text-color: @foreground;
+    placeholder: "Search...";
+    placeholder-color: @foreground;
+    expand: true;
+}
+
+listview {
+    background-color: @background;
+    columns: 1;
+    lines: 10;
+    spacing: 5px;
+    cycle: true;
+    dynamic: true;
+    layout: vertical;
+}
+
+element {
+    background-color: @background;
+    text-color: @foreground;
+    padding: 10px;
+}
+
+element-text {
+    background-color: inherit;
+    text-color: inherit;
+    expand: true;
+}
+
+element selected {
+    background-color: @background;
+    text-color: @selected;
+}
+
+element urgent {
+    background-color: @urgent;
+    text-color: @foreground;
+}
+
+element active {
+    background-color: @active;
+    text-color: @foreground;
+}

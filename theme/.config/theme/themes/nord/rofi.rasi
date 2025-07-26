@@ -1,0 +1,88 @@
+* {
+    /* Nord colors with transparency */
+    background:     #2E3440E6;
+    background-alt: #3B4252E6;
+    foreground:     #D8DEE9FF;
+    selected:       #88C0D0FF;
+    selected-bg:    #88C0D020;
+    active:         #81A1C1FF;
+    urgent:         #BF616AFF;
+    border-color:   #4C566A80;
+    transparent:    #00000000;
+    
+    /* Apply colors */
+    background-color: @transparent;
+    text-color: @foreground;
+    
+    /* Remove all default styling */
+    border: 0;
+    margin: 0;
+    padding: 0;
+    spacing: 0;
+}
+
+window {
+    background-color: @background;
+    border-radius: 16px;
+    width: 600px;
+    location: center;
+    anchor: center;
+    padding: 0;
+}
+
+mainbox {
+    background-color: @transparent;
+    children: [ inputbar, listview ];
+    padding: 0;
+    spacing: 0;
+}
+
+inputbar {
+    children: [ entry ];
+    background-color: @background-alt;
+    padding: 16px 20px;
+    border-radius: 16px 16px 0 0;
+}
+
+entry {
+    background-color: @transparent;
+    text-color: @foreground;
+    placeholder: "Search...";
+    placeholder-color: #D8DEE980;
+    font: "CaskaydiaMono Nerd Font 16";
+    cursor: text;
+}
+
+listview {
+    background-color: @transparent;
+    columns: 1;
+    lines: 10;
+    spacing: 0;
+    cycle: true;
+    dynamic: true;
+    layout: vertical;
+    padding: 8px;
+}
+
+element {
+    background-color: @transparent;
+    text-color: @foreground;
+    padding: 10px 16px;
+    border-radius: 8px;
+    margin: 2px 4px;
+}
+
+element-text {
+    background-color: @transparent;
+    text-color: inherit;
+    vertical-align: 0.5;
+}
+
+element selected {
+    background-color: @selected-bg;
+    text-color: @selected;
+}
+
+element alternate {
+    background-color: @transparent;
+}

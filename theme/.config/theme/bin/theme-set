@@ -68,6 +68,9 @@ restart_ui_components() {
   # Kill walker to force it to reload theme on next launch
   pkill walker 2>/dev/null || true
   
+  # Kill rofi to force it to reload theme on next launch
+  pkill rofi 2>/dev/null || true
+  
   # Restart SwayOSD to apply new theme
   pkill swayosd-server 2>/dev/null || true
   uwsm app -- swayosd-server >/dev/null 2>&1 &

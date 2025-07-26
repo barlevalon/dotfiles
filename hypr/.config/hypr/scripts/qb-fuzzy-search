@@ -1,21 +1,27 @@
 #!/bin/bash
 
-# Check if our specific wofi instance is running
-if pgrep -f "wofi.*Qutebrowser" > /dev/null; then
-    # Our qb-fuzzy-search wofi is running, kill it (toggle off)
-    pkill -x wofi
+# Check if our specific rofi instance is running
+if pgrep -f "rofi.*Qutebrowser" > /dev/null; then
+    # Our qb-fuzzy-search rofi is running, kill it (toggle off)
+    pkill -x rofi
     exit 0
 fi
 
-# Kill any other wofi instance that might be running
-pkill -x wofi 2>/dev/null
+# Kill any other rofi instance that might be running
+pkill -x rofi 2>/dev/null
 
 # Temporary file for entries
 TEMP_FILE=$(mktemp)
-trap "rm -f $TEMP_FILE" EXIT
 
 # Fixed session file location
 SESSION_FILE="/tmp/qb-fuzzy-search-session.yml"
+
+# Create separate temp files for each category to control order
+TABS_FILE=$(mktemp)
+QM_FILE=$(mktemp)
+BM_FILE=$(mktemp)
+HISTORY_FILE=$(mktemp)
+trap "rm -f $TEMP_FILE $TABS_FILE $QM_FILE $BM_FILE $HISTORY_FILE" EXIT
 
 # Save current session if qutebrowser is running
 if pgrep -x qutebrowser > /dev/null; then
@@ -28,14 +34,14 @@ if pgrep -x qutebrowser > /dev/null; then
             $tab.history[] | 
             select(.active == true and .url != null and .url != "about:blank") | 
             (select($tab.active) | "[TAB*] " + (.title // .url) + " - " + .url) // 
-            (select($tab.active | not) | "[TAB] " + (.title // .url) + " - " + .url)' "$SESSION_FILE" >> "$TEMP_FILE" 2>/dev/null
+            (select($tab.active | not) | "[TAB] " + (.title // .url) + " - " + .url)' "$SESSION_FILE" >> "$TABS_FILE" 2>/dev/null
     fi
 fi
 
 # Add quickmarks if file exists
 if [ -f ~/.config/qutebrowser/quickmarks ]; then
     while IFS=' ' read -r name url; do
-        echo "[QM] $name - $url" >> "$TEMP_FILE"
+        echo "[QM] $name - $url" >> "$QM_FILE"
     done < ~/.config/qutebrowser/quickmarks
 fi
 
@@ -47,7 +53,7 @@ if [ -f ~/.config/qutebrowser/bookmarks ]; then
         if [[ ! "$url" =~ ^https?:// && ! "$url" =~ ^file:// && ! "$url" =~ ^about: ]]; then
             url="https://$url"
         fi
-        echo "[BM] ${title:-$url} - $url" >> "$TEMP_FILE"
+        echo "[BM] ${title:-$url} - $url" >> "$BM_FILE"
     done < ~/.config/qutebrowser/bookmarks
 fi
 
@@ -60,9 +66,16 @@ if [ -f ~/.local/share/qutebrowser/history.sqlite ]; then
             # Skip empty URLs
             [ -z "$url" ] && continue
             # Use URL as title if title is empty
-            echo "[H] ${title:-$url} - $url" >> "$TEMP_FILE"
+            echo "[H] ${title:-$url} - $url" >> "$HISTORY_FILE"
         done
 fi
+
+# Combine files in the correct order: TAB, QM, BM, SEARCH, H
+cat "$TABS_FILE" >> "$TEMP_FILE" 2>/dev/null
+cat "$QM_FILE" >> "$TEMP_FILE" 2>/dev/null
+cat "$BM_FILE" >> "$TEMP_FILE" 2>/dev/null
+# No need for SEARCH item - Ctrl+Return forces search
+cat "$HISTORY_FILE" >> "$TEMP_FILE" 2>/dev/null
 
 # Check if we have any entries
 if [ ! -s "$TEMP_FILE" ]; then
@@ -70,11 +83,54 @@ if [ ! -s "$TEMP_FILE" ]; then
     exit 1
 fi
 
-# Use wofi to select an entry
-SELECTED=$(cat "$TEMP_FILE" | wofi --dmenu --prompt "Qutebrowser" --cache-file /dev/null)
+# Use rofi to select an entry
+# -dmenu: dmenu mode
+# -i: case insensitive
+# -p: prompt
+# -theme: use our custom theme directly
+# -kb-accept-custom: Ctrl+Return accepts custom input (for search)
+# -matching fuzzy: fuzzy matching like modern launchers
+# Check exit code: 0 = normal selection, 10 = custom input (Ctrl+Return)
+SELECTED=$(cat "$TEMP_FILE" | rofi -dmenu -i -p " " \
+    -kb-accept-custom "Control+Return" \
+    -matching fuzzy \
+    -theme "/home/alon/dotfiles/theme/.config/theme/themes/nord/rofi.rasi")
+ROFI_EXIT=$?
 
-# Exit if nothing selected
+# Exit if nothing selected (ESC pressed)
 [ -z "$SELECTED" ] && exit 0
+
+# Check if Ctrl+Return was pressed (exit code 10) - force search
+if [ $ROFI_EXIT -eq 10 ]; then
+    # User wants to search for what they typed
+    SEARCH_QUERY="$SELECTED"
+    
+    # Open search in qutebrowser
+    if pgrep -x qutebrowser > /dev/null; then
+        # Qutebrowser is running, open search in new tab
+        qutebrowser ":open -t -- $SEARCH_QUERY"
+    else
+        # Qutebrowser not running, start it with search
+        qutebrowser "-- $SEARCH_QUERY"
+    fi
+    exit 0
+fi
+
+# Check if the selected text matches any entry in our list
+if ! grep -Fxq "$SELECTED" "$TEMP_FILE"; then
+    # User typed something that's not in the list - treat as search query
+    SEARCH_QUERY="$SELECTED"
+    
+    # Open search in qutebrowser
+    if pgrep -x qutebrowser > /dev/null; then
+        # Qutebrowser is running, open search in new tab
+        qutebrowser ":open -t -- $SEARCH_QUERY"
+    else
+        # Qutebrowser not running, start it with search
+        qutebrowser "-- $SEARCH_QUERY"
+    fi
+    exit 0
+fi
 
 # Check what type of entry was selected
 if [[ "$SELECTED" =~ ^\[TAB\*?\] ]]; then
@@ -106,7 +162,7 @@ elif [[ "$SELECTED" =~ ^\[QM\] ]]; then
         fi
     fi
 else
-    # Not a quickmark or tab, extract URL normally
+    # Not a quickmark, tab, or search item - extract URL normally
     URL=$(echo "$SELECTED" | sed 's/.* - //')
     
     # Check if URL is valid

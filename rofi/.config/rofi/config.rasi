@@ -1,0 +1,15 @@
+configuration {
+    modi: "drun,run,window";
+    font: "CaskaydiaMono Nerd Font 16";
+    show-icons: false;
+    icon-theme: "Papirus";
+    display-drun: "";
+    display-run: "";
+    display-window: "";
+    drun-display-format: "{name}";
+    window-format: "{w} {t}";
+    
+    /* Modern behavior */
+    click-to-exit: true;
+    hide-scrollbar: true;
+}
