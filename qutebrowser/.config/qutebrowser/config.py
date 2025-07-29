@@ -13,6 +13,9 @@ c.fonts.default_size = "20pt"
 c.auto_save.session = False
 c.input.insert_mode.auto_load = True
 
+c.url.start_pages = "about:blank"
+c.url.default_page = "about:blank"
+
 en_keys = "qwertyuiopasdfghjkl'zxcvbnm,./"
 he_keys = '/׳קראטוןםפשדגכעיחלך,זסבהנמצתץ.'
 
