@@ -26,8 +26,16 @@ c.bindings.key_mappings.update(dict(zip(he_keys, en_keys)))
 
 c.content.user_stylesheets = ["~/.config/qutebrowser/hebrew-fonts.css"]
 
-# Enable GPU hardware acceleration
-c.qt.args = ["enable-features=VaapiVideoDecoder,VaapiVideoEncoder", "enable-gpu-rasterization", "enable-zero-copy"]
+# Enable GPU hardware acceleration and WebRTC screen sharing
+c.qt.args = [
+    "enable-features=VaapiVideoDecoder,VaapiVideoEncoder,WebRTCPipeWireCapturer", 
+    "enable-gpu-rasterization", 
+    "enable-zero-copy",
+    "ozone-platform-hint=auto"
+]
+
+# Enable WebRTC screen sharing on Wayland
+c.content.desktop_capture = "ask"
 
 # 1Password integration keybindings
 config.bind('<Alt-p>', 'spawn --userscript qute-1pass')
