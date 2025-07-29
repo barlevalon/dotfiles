@@ -5,6 +5,7 @@
 - Managed with GNU Stow for symlink management
 - All symlinks should be relative for portability
 - Branch structure: `arch` for Arch Linux, `main` for macOS
+- Based on and inspired by github.com/basecamp/omarchy
 
 ## Structure
 Each directory is a "stow package" that gets symlinked to `$HOME`:
