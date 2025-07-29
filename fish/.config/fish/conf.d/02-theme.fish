@@ -1,2 +1,2 @@
-# Load Tokyo Night Storm theme
-source $XDG_CONFIG_HOME/fish/themes/fish_tokyonight_storm.fish
+# Bat alias for base16 theme
+alias bat="bat --theme=base16-256"

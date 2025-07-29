@@ -48,4 +48,4 @@ tooltip label {
   padding: 2px;
 }
 
-@import "../theme/current/theme/waybar.css";
+@import "colors.css";

@@ -10,5 +10,5 @@ fi
 # Kill any other wofi instance that might be running
 pkill -x wofi 2>/dev/null
 
-# Launch wofi with any arguments passed to this script
-wofi "$@"
+# Launch wofi with any arguments passed to this script, including colors file
+wofi --color "$HOME/.config/wofi/colors" "$@"

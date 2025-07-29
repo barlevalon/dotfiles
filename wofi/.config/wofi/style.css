@@ -1,5 +1,3 @@
-@import "/home/alon/.config/theme/current/theme/wofi.css";
-
 * {
   font-family: 'CaskaydiaMono Nerd Font', monospace;
   font-size: 18px;
@@ -18,7 +16,7 @@
 window {
   margin: 0px;
   padding: 20px;
-  background-color: @base;
+  background-color: --wofi-color0;
   opacity: 0.95;
 }
 
@@ -26,29 +24,29 @@ window {
   margin: 0;
   padding: 0;
   border: none;
-  background-color: @base;
+  background-color: --wofi-color0;
 }
 
 #outer-box {
   margin: 0;
   padding: 20px;
-  border: 2px solid @border;
-  background-color: @base;
+  border: 2px solid --wofi-color5;
+  background-color: --wofi-color0;
 }
 
 #scroll {
   margin: 0;
   padding: 0;
   border: none;
-  background-color: @base;
+  background-color: --wofi-color0;
 }
 
 #input {
   margin: 0;
   padding: 10px;
   border: none;
-  background-color: @base;
-  color: @text;
+  background-color: --wofi-color0;
+  color: --wofi-color5;
 }
 
 #input:focus {
@@ -60,20 +58,21 @@ window {
 #text {
   margin: 5px;
   border: none;
-  color: @text;
+  color: --wofi-color5;
 }
 
 #entry {
-  background-color: @base;
+  background-color: --wofi-color0;
 }
 
 #entry:selected {
   outline: none;
   border: none;
+  background-color: --wofi-color1;
 }
 
 #entry:selected #text {
-  color: @selected-text;
+  color: --wofi-color13;
 }
 
 #entry image {

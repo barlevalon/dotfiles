@@ -4,7 +4,7 @@
 OPTIONS="󰌾  Lock\n󰶐  Display Off\n󰍃  Logout\n󰜉  Restart\n󰐥  Power Off"
 
 # Get the selected option
-SELECTED=$(echo -e "$OPTIONS" | wofi --dmenu --prompt "Power Menu")
+SELECTED=$(echo -e "$OPTIONS" | wofi --dmenu --prompt "Power Menu" --color "$HOME/.config/wofi/colors")
 
 case $SELECTED in
     "󰌾  Lock")

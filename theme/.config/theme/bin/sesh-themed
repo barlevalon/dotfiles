@@ -1,12 +1,12 @@
 #!/bin/bash
 # Wrapper for sesh that uses the current theme's FZF colors
 
-# Get FZF_DEFAULT_OPTS from tmux global environment
-if [[ -n "${TMUX:-}" ]]; then
-  FZF_OPTS=$(tmux show-environment -g FZF_DEFAULT_OPTS 2>/dev/null | cut -d= -f2-)
-  if [[ -n "$FZF_OPTS" ]]; then
-    export FZF_DEFAULT_OPTS="$FZF_OPTS"
-  fi
+# Clear any cached FZF options to ensure we get fresh colors
+unset FZF_DEFAULT_OPTS
+
+# The simplest approach: run fish to get the current FZF_DEFAULT_OPTS
+if command -v fish >/dev/null 2>&1; then
+  export FZF_DEFAULT_OPTS=$(fish -c 'echo $FZF_DEFAULT_OPTS')
 fi
 
 # Run sesh with the themed FZF

@@ -1,48 +1,50 @@
 #!/bin/bash
 set -euo pipefail
 
-# bg-next: Cycle to the next background for the current theme
+# bg-next: Cycle through backgrounds for the current theme
+# Usage: bg-next
 
 THEME_BASE_DIR="$HOME/.config/theme"
-CURRENT_THEME_DIR="$THEME_BASE_DIR/current/theme"
-BG_DIR="$CURRENT_THEME_DIR/backgrounds"
-STATE_FILE="$THEME_BASE_DIR/.current_bg_index"
+CURRENT_THEME=$(cat "$THEME_BASE_DIR/current_theme" 2>/dev/null || echo "nord")
+BG_DIR="$THEME_BASE_DIR/backgrounds/$CURRENT_THEME"
+CURRENT_BG_LINK="$THEME_BASE_DIR/background.jpg"
 
-# Check if backgrounds directory exists
+# Check if background directory exists
 if [[ ! -d "$BG_DIR" ]]; then
-  echo "No backgrounds directory for current theme" >&2
+  echo "No backgrounds found for theme: $CURRENT_THEME" >&2
   exit 1
 fi
 
-# Get all background files
-mapfile -t backgrounds < <(find -L "$BG_DIR" -type f \( -name "*.jpg" -o -name "*.png" -o -name "*.jpeg" \) | sort)
+# Get all background images
+mapfile -t backgrounds < <(find "$BG_DIR" -type f \( -name "*.jpg" -o -name "*.png" -o -name "*.jpeg" -o -name "*.webp" \) | sort)
 
 # Check if any backgrounds exist
 if [[ ${#backgrounds[@]} -eq 0 ]]; then
-  echo "No backgrounds found in current theme" >&2
+  echo "No background images found in: $BG_DIR" >&2
   exit 1
 fi
 
-# Get current index
-current_index=0
-if [[ -f "$STATE_FILE" ]]; then
-  current_index=$(cat "$STATE_FILE" 2>/dev/null || echo 0)
+# Get current background
+current_bg=""
+if [[ -L "$CURRENT_BG_LINK" ]]; then
+  current_bg=$(readlink -f "$CURRENT_BG_LINK")
 fi
 
-# Calculate next index
-next_index=$(( (current_index + 1) % ${#backgrounds[@]} ))
+# Find next background
+next_index=0
+for i in "${!backgrounds[@]}"; do
+  if [[ "${backgrounds[$i]}" == "$current_bg" ]]; then
+    next_index=$(( (i + 1) % ${#backgrounds[@]} ))
+    break
+  fi
+done
 
-# Get the background file
-bg_file="${backgrounds[$next_index]}"
+# Set next background
+next_bg="${backgrounds[$next_index]}"
+ln -nsf "$next_bg" "$CURRENT_BG_LINK"
 
-# Update background
+# Update swaybg
 pkill -x swaybg 2>/dev/null || true
-uwsm app -- swaybg -i "$bg_file" -m fill >/dev/null 2>&1 &
+uwsm app -- swaybg -i "$next_bg" -m fill >/dev/null 2>&1 &
 
-# Save current index
-echo "$next_index" > "$STATE_FILE"
-
-# Update the background.jpg symlink
-ln -nsf "$bg_file" "$THEME_BASE_DIR/background.jpg"
-
-echo "Switched to: $(basename "$bg_file")"
+echo "Background changed to: $(basename "$next_bg")"

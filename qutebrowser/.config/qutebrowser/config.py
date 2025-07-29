@@ -1,8 +1,8 @@
 config.load_autoconfig()
 
-# Load theme from theme system
+# Load theme from tinty
 import os
-theme_file = os.path.expanduser("~/.config/theme/current/theme/qutebrowser.py")
+theme_file = os.path.expanduser("~/.config/qutebrowser/colors.py")
 if os.path.exists(theme_file):
     config.source(theme_file)
 

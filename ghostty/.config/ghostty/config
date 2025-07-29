@@ -2,4 +2,4 @@ font-family = MesloLGM Nerd Font Mono
 font-size = 18
 
 # Include theme configuration
-config-file = ~/.config/theme/current/theme/ghostty.conf
+config-file = ~/.config/ghostty/theme
