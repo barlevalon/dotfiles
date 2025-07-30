@@ -24,7 +24,11 @@
 #bluetooth,
 #pulseaudio,
 #clock,
-#custom-power-menu,
+#custom-power-menu {
+  min-width: 12px;
+  margin-right: 13px;
+}
+
 #tray {
   min-width: 12px;
   margin-right: 13px;

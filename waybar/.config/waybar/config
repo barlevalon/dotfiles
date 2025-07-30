@@ -10,7 +10,7 @@
       "clock"
     ],
     "modules-right": [
-      "group/tray-expander",
+      "tray",
       "bluetooth",
       "network",
       "pulseaudio",
@@ -60,8 +60,7 @@
       "tooltip-format-ethernet": "⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}",
       "tooltip-format-disconnected": "Disconnected",
       "interval": 3,
-      "nospacing": 1,
-      "on-click": "ghostty -e iwctl"
+      "nospacing": 1
     },
     "bluetooth": {
       "format": "",
@@ -87,21 +86,7 @@
       "on-click": "~/.config/hypr/scripts/power-menu",
       "tooltip": false
     },
-    "group/tray-expander": {
-      "orientation": "inherit",
-      "drawer": {
-        "transition-duration": 600,
-        "children-class": "tray-group-item"
-      },
-      "modules": [
-        "custom/expand-icon",
-        "tray"
-      ]
-    },
-    "custom/expand-icon": {
-      "format": "󰅂",
-      "tooltip": false
-    },
+
     "tray": {
       "icon-size": 12,
       "spacing": 12
