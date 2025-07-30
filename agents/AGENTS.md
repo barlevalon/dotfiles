@@ -8,7 +8,7 @@ General instructions:
 - When working in a git repo, check if clean state first, and if not, ask how to proceed
 - Get action plan approval before making file edits
 - Always begin a session by sourcing the claude.env (or ~/.claude/claude.env) file if it exists
-- Use tmux to run long-running commands:
+- Use tmux to run sudo or long-running commands:
   - Create session first: `tmux new-session -d -s session-name` or attach to existing
   - Send command: `tmux send-keys -t session-name 'command' Enter`
   - This provides better visibility - user can see the actual command and session persists after completion
