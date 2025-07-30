@@ -1,8 +1,5 @@
 lazygit/.config/lazygit/state.yml
 klbs/.config/klbs/klbs.toml
-theme/.config/theme/*.jpg
-theme/.config/theme/*.png
 tmux/.config/tmux/plugins/
 fish/.config/fish/fish_variables
 agents/AGENTS.env
-theme/.config/theme/background.jpg
