@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# Check if screensaver ghostty is already running
+if pgrep -f "ghostty.*--title=hearter-screensaver" > /dev/null 2>&1; then
+    exit 0
+fi
+
+# Launch ghostty in fullscreen with the ASCII animation
+# Note: --class might not be supported, using --title instead
+exec ghostty --fullscreen --title="hearter-screensaver" -e bash -c '
+# Save terminal settings and set raw mode to catch any key
+saved_tty=$(stty -g)
+stty -echo -icanon min 0 time 0
+
+cleanup() {
+    stty "$saved_tty"
+    exit 0
+}
+trap cleanup EXIT INT TERM
+
+while true; do
+  # Get random effect from the effects list in the usage line
+  effects=(beams binarypath blackhole bouncyballs bubbles burn colorshift crumble decrypt errorcorrect expand fireworks highlight laseretch matrix middleout orbittingvolley overflow pour print rain randomsequence rings scattered slice slide spotlights spray swarm sweep synthgrid unstable vhstape waves wipe)
+  effect=${effects[$RANDOM % ${#effects[@]}]}
+  
+  # Run effect in background
+  tte -i ~/.config/hypr/assets/hearter-ascii.txt --frame-rate 240 --canvas-width 0 --canvas-height 0 --anchor-canvas c --anchor-text c "$effect" &
+  tte_pid=$!
+  
+  # Wait for any key press
+  while kill -0 $tte_pid 2>/dev/null; do
+    if read -n 1 -t 0.1; then
+      kill $tte_pid 2>/dev/null
+      cleanup
+    fi
+  done
+  
+  # Clear for next effect
+  clear
+done
+'
