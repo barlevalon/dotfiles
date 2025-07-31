@@ -1,0 +1,9 @@
+[[session]]
+name = "alon-mbp 💻"
+path = "~"
+startup_command = "ssh alonhearter@alon-mbp"
+
+[[session]]
+name = "mini"
+path = "~"
+startup_command = "ssh hearter@mini"
