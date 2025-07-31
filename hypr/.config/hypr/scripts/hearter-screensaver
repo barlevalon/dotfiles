@@ -5,6 +5,12 @@ if pgrep -f "ghostty.*--title=hearter-screensaver" > /dev/null 2>&1; then
     exit 0
 fi
 
+# Save current cursor timeout setting
+CURRENT_TIMEOUT=$(hyprctl getoption cursor:inactive_timeout -j | jq -r '.float')
+
+# Set cursor to hide after 0.1 seconds of inactivity
+hyprctl keyword cursor:inactive_timeout 0.1
+
 # Launch ghostty in fullscreen with the ASCII animation
 # Note: --class might not be supported, using --title instead
 exec ghostty --fullscreen --title="hearter-screensaver" -e bash -c '
@@ -14,6 +20,8 @@ stty -echo -icanon min 0 time 0
 
 cleanup() {
     stty "$saved_tty"
+    # Restore cursor timeout setting
+    hyprctl keyword cursor:inactive_timeout $CURRENT_TIMEOUT
     exit 0
 }
 trap cleanup EXIT INT TERM
