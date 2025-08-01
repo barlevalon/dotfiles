@@ -10,6 +10,7 @@ bat
 bc
 bind
 blueberry
+bluez-utils
 brightnessctl
 btop
 btrfs-progs
@@ -28,10 +29,7 @@ erdtree
 evince
 eza
 fastfetch
-fcitx5
-fcitx5-configtool
 fcitx5-gtk
-fcitx5-qt
 fd
 fish
 foot
@@ -113,7 +111,6 @@ rbenv
 rclone
 reflector
 ripgrep
-rofi-wayland
 rust
 satty
 sesh-bin
@@ -127,13 +124,16 @@ swayosd
 syncthing
 system-config-printer
 tailscale
+terminaltexteffects-git
 terraform
+tinty-git
 tldr
 tmux
 tree-sitter-cli
 ttf-meslo-nerd
 unzip
 uwsm
+visual-studio-code-bin
 vivaldi
 walker-bin
 waybar
