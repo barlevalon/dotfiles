@@ -11,3 +11,9 @@ startup_command = "ssh alonhearter@alon-mbp"
 name = "mini"
 path = "~"
 startup_command = "ssh hearter@mini"
+
+[[session]]
+name = "kielbasa 🎥"
+path = "~"
+startup_command = "ssh k"
+
