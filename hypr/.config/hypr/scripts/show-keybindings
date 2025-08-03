@@ -1,67 +1,75 @@
 #!/usr/bin/env bash
 
-# A script to display Hyprland keybindings defined in your configuration
-# using wofi for an interactive search menu.
+# Enhanced keybindings display with human-readable descriptions
+# Uses hyprctl to get dynamic bindings with descriptions
 
-# Check multiple potential binding locations
-BINDING_FILES=(
-    "$HOME/.config/hypr/bindings.conf"
-    "$HOME/.config/hypr/hyprland.conf"
-    "$HOME/.config/hypr/user-bindings.conf"
-)
+# Fetch dynamic keybindings from Hyprland
+# Map numeric modifier key mask to textual representation
+dynamic_bindings() {
+  hyprctl -j binds 2>/dev/null | \
+    jq -r '.[] | {modmask, key, keycode, description, dispatcher, arg} | "\(.modmask),\(.key)@\(.keycode),\(.description),\(.dispatcher),\(.arg)"' | \
+    sed -r \
+        -e 's/null//' \
+        -e 's/@0//' \
+        -e 's/,@/,code:/' \
+        -e 's/^0,/,/' \
+        -e 's/^1,/SHIFT,/' \
+        -e 's/^4,/CTRL,/' \
+        -e 's/^5,/SHIFT CTRL,/' \
+        -e 's/^8,/ALT,/' \
+        -e 's/^9,/SHIFT ALT,/' \
+        -e 's/^12,/CTRL ALT,/' \
+        -e 's/^13,/SHIFT CTRL ALT,/' \
+        -e 's/^64,/SUPER,/' \
+        -e 's/^65,/SUPER SHIFT,/' \
+        -e 's/^68,/SUPER CTRL,/' \
+        -e 's/^69,/SUPER SHIFT CTRL,/' \
+        -e 's/^72,/SUPER ALT,/'
+}
 
-# Process configuration files to extract and format keybindings
-BINDINGS=""
-for file in "${BINDING_FILES[@]}"; do
-    if [[ -f "$file" ]]; then
-        BINDINGS+=$(grep -h '^[[:space:]]*bind' "$file" 2>/dev/null)
-        BINDINGS+=$'\n'
-    fi
-done
-
-# Format the bindings
-FORMATTED_BINDINGS=$(echo "$BINDINGS" | awk -F, '
+# Parse and format keybindings with descriptions
+parse_bindings() {
+  awk -F, '
 {
-    # Skip empty lines
-    if (NF == 0) next;
-    
-    # Strip trailing comments
-    sub(/#.*/, "");
-
-    # Remove the "bind... =" part and surrounding whitespace
-    sub(/^[[:space:]]*bind[^=]*=[[:space:]]*/, "", $1);
-
     # Combine the modifier and key (first two fields)
     key_combo = $1 " + " $2;
 
     # Clean up: strip leading "+" if present, trim spaces
     gsub(/^[ \t]*\+?[ \t]*/, "", key_combo);
     gsub(/[ \t]+$/, "", key_combo);
-
-    # Reconstruct the command from the remaining fields
-    action = "";
-    for (i = 3; i <= NF; i++) {
-        action = action $i (i < NF ? "," : "");
-    }
-
-    # Clean up trailing commas, remove leading "exec, ", and trim
-    sub(/,$/, "", action);
-    gsub(/(^|,)[[:space:]]*exec[[:space:]]*,?/, "", action);
-    gsub(/^[ \t]+|[ \t]+$/, "", action);
     gsub(/[ \t]+/, " ", key_combo);  # Collapse multiple spaces to one
+
+    # Use description if available, otherwise use the command
+    action = $3;
+    
+    if (action == "") {
+        # Reconstruct the command from the remaining fields
+        for (i = 4; i <= NF; i++) {
+            action = action $i (i < NF ? "," : "");
+        }
+
+        # Clean up trailing commas, remove leading "exec, ", and trim
+        sub(/,$/, "", action);
+        gsub(/(^|,)[[:space:]]*exec[[:space:]]*,?/, "", action);
+        gsub(/^[ \t]+|[ \t]+$/, "", action);
+    }
 
     if (action != "") {
         printf "%-35s → %s\n", key_combo, action;
     }
-}' | sort | uniq)
+}'
+}
 
 # Show keybindings in wofi
 if command -v wofi &> /dev/null; then
-    echo "$FORMATTED_BINDINGS" | ~/.config/hypr/scripts/wofi-launcher --dmenu --prompt "Hyprland Keybindings" --width 60% --height 70%
+    dynamic_bindings | \
+      sort -u | \
+      parse_bindings | \
+      ~/.config/hypr/scripts/wofi-launcher --dmenu --prompt "Hyprland Keybindings" --width 60% --height 70%
 else
     # Fallback to terminal output
     echo "=== Hyprland Keybindings ==="
-    echo "$FORMATTED_BINDINGS"
+    dynamic_bindings | sort -u | parse_bindings
     echo ""
     echo "Press any key to exit..."
     read -n 1
