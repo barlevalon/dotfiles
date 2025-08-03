@@ -1,0 +1,10 @@
+[Unit]
+Description=Update nightlight every 10 minutes
+Requires=auto-nightlight.service
+
+[Timer]
+OnBootSec=30s
+OnUnitActiveSec=10m
+
+[Install]
+WantedBy=timers.target

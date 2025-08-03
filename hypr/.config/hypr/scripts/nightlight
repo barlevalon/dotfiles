@@ -1,0 +1,135 @@
+#!/bin/bash
+
+# Configuration
+CITY="${NIGHTLIGHT_CITY:-Tel Aviv}"
+DAY_TEMP=6500
+NIGHT_TEMP=4000
+TRANSITION_MINUTES=30
+STATE_FILE="/tmp/nightlight_state"
+
+# Helper: Get location from city
+get_location() {
+    local cache="/tmp/nightlight_location_$(echo "$CITY" | md5sum | cut -d' ' -f1)"
+    if [[ -f "$cache" ]] && [[ $(find "$cache" -mtime -7 2>/dev/null) ]]; then
+        source "$cache"
+    else
+        local response=$(curl -s "https://geocoding-api.open-meteo.com/v1/search?name=$(echo "$CITY" | sed 's/ /%20/g')&count=1")
+        LAT=$(echo "$response" | jq -r '.results[0].latitude')
+        LON=$(echo "$response" | jq -r '.results[0].longitude')
+        echo "LAT=$LAT" > "$cache"
+        echo "LON=$LON" >> "$cache"
+    fi
+}
+
+# Helper: Get sunrise/sunset times
+get_sun_times() {
+    local cache="/tmp/sun_times_$(date +%Y%m%d)_$(echo "$LAT$LON" | md5sum | cut -d' ' -f1)"
+    if [[ -f "$cache" ]]; then
+        # Read from cache
+        read SUNRISE SUNSET < "$cache"
+    else
+        local response=$(curl -s "https://api.sunrise-sunset.org/json?lat=$LAT&lng=$LON&formatted=0")
+        SUNRISE=$(date -d "$(echo "$response" | jq -r '.results.sunrise')" '+%H:%M')
+        SUNSET=$(date -d "$(echo "$response" | jq -r '.results.sunset')" '+%H:%M')
+        echo "$SUNRISE $SUNSET" > "$cache"
+    fi
+}
+
+# Helper: Calculate temperature based on time
+calculate_temp() {
+    local current_minutes=$((10#$(date '+%H') * 60 + 10#$(date '+%M')))
+    local sunrise_minutes=$((10#${SUNRISE%%:*} * 60 + 10#${SUNRISE##*:}))
+    local sunset_minutes=$((10#${SUNSET%%:*} * 60 + 10#${SUNSET##*:}))
+    
+    if [[ $current_minutes -lt $((sunrise_minutes - TRANSITION_MINUTES)) ]] || 
+       [[ $current_minutes -gt $((sunset_minutes + TRANSITION_MINUTES)) ]]; then
+        echo $NIGHT_TEMP
+    elif [[ $current_minutes -ge $sunrise_minutes ]] && 
+         [[ $current_minutes -le $sunset_minutes ]]; then
+        echo $DAY_TEMP
+    elif [[ $current_minutes -lt $sunrise_minutes ]]; then
+        local progress=$((current_minutes - (sunrise_minutes - TRANSITION_MINUTES)))
+        echo $((NIGHT_TEMP + ((DAY_TEMP - NIGHT_TEMP) * progress / TRANSITION_MINUTES)))
+    else
+        local progress=$((current_minutes - sunset_minutes))
+        echo $((DAY_TEMP - ((DAY_TEMP - NIGHT_TEMP) * progress / TRANSITION_MINUTES)))
+    fi
+}
+
+# Helper: Set temperature
+set_temp() {
+    pkill hyprsunset 2>/dev/null
+    sleep 0.2
+    (hyprsunset -t "$1" >/dev/null 2>&1) &
+}
+
+# Commands
+case "${1:-toggle}" in
+    toggle)
+        # Cycle through off -> auto -> manual -> off
+        STATE=$(cat "$STATE_FILE" 2>/dev/null || echo "off")
+        case "$STATE" in
+            off)
+                get_location
+                get_sun_times
+                TEMP=$(calculate_temp)
+                set_temp "$TEMP"
+                echo "auto" > "$STATE_FILE"
+                notify-send "󰖔 Nightlight" "Auto mode (${TEMP}K)\nSunrise: $SUNRISE\nSunset: $SUNSET"
+                ;;
+            auto)
+                set_temp 4000
+                echo "manual" > "$STATE_FILE"
+                notify-send "󰖔 Nightlight" "Manual warm (4000K)"
+                ;;
+            manual)
+                pkill hyprsunset 2>/dev/null
+                echo "off" > "$STATE_FILE"
+                notify-send "󰖕 Nightlight" "Disabled"
+                ;;
+        esac
+        ;;
+        
+    auto|update)
+        # Update temperature based on sunrise/sunset
+        get_location
+        get_sun_times
+        TEMP=$(calculate_temp)
+        set_temp "$TEMP"
+        echo "auto" > "$STATE_FILE"
+        [[ "$1" == "auto" ]] && echo "Set to ${TEMP}K (sunrise: $SUNRISE, sunset: $SUNSET)"
+        ;;
+        
+    set)
+        # Set specific temperature
+        TEMP="${2:-4000}"
+        set_temp "$TEMP"
+        echo "manual" > "$STATE_FILE"
+        echo "Set to ${TEMP}K"
+        ;;
+        
+    status)
+        # Show current status
+        STATE=$(cat "$STATE_FILE" 2>/dev/null || echo "off")
+        echo "State: $STATE"
+        pgrep -a hyprsunset || echo "Hyprsunset not running"
+        ;;
+        
+    off)
+        # Turn off
+        pkill hyprsunset 2>/dev/null
+        echo "off" > "$STATE_FILE"
+        echo "Nightlight disabled"
+        ;;
+        
+    *)
+        echo "Usage: $0 {toggle|auto|update|set <temp>|status|off}"
+        echo "  toggle - Cycle through off/auto/manual modes"
+        echo "  auto   - Set temperature based on sunrise/sunset"
+        echo "  update - Same as auto but silent (for systemd)"
+        echo "  set    - Set specific temperature (default 4000K)"
+        echo "  status - Show current state"
+        echo "  off    - Turn off nightlight"
+        exit 1
+        ;;
+esac

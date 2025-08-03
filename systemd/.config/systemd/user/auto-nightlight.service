@@ -1,0 +1,12 @@
+[Unit]
+Description=Automatic nightlight based on sunrise/sunset
+After=graphical-session.target
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/hypr/scripts/nightlight update
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target
