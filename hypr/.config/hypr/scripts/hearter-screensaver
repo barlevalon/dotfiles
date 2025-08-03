@@ -42,8 +42,5 @@ while true; do
       cleanup
     fi
   done
-  
-  # Clear for next effect
-  clear
 done
 '
