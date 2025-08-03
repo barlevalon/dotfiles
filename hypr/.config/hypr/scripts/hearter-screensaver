@@ -13,7 +13,7 @@ hyprctl keyword cursor:inactive_timeout 0.1
 
 # Launch ghostty in fullscreen with the ASCII animation
 # Note: --class might not be supported, using --title instead
-exec ghostty --fullscreen --title="hearter-screensaver" -e bash -c '
+exec ghostty --fullscreen --title="hearter-screensaver" --font-size=24 -e bash -c '
 # Save terminal settings and set raw mode to catch any key
 saved_tty=$(stty -g)
 stty -echo -icanon min 0 time 0
