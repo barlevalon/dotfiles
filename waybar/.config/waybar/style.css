@@ -17,6 +17,16 @@
   min-width: 24px;
 }
 
+#workspaces button.active {
+  font-weight: bold;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-bottom: 2px solid #8aadf4;
+}
+
+#workspaces button.empty {
+  opacity: 0.4;
+}
+
 #cpu,
 #power-profiles-daemon,
 #battery,
