@@ -142,7 +142,8 @@ fi
 SELECTED=$(cat "$TEMP_FILE" | rofi -dmenu -i -p " " \
     -kb-accept-custom "Control+Return" \
     -matching fuzzy \
-    -theme "$THEME_PATH")
+    -theme "$THEME_PATH" \
+    -window-title "Qutebrowser Fuzzy Search")
 ROFI_EXIT=$?
 
 # Exit if nothing selected (ESC pressed)
