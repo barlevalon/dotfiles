@@ -5,7 +5,7 @@ CITY="${NIGHTLIGHT_CITY:-Tel Aviv}"
 DAY_TEMP=6500
 NIGHT_TEMP=4000
 TRANSITION_MINUTES=30
-STATE_FILE="/tmp/nightlight_state"
+STATE_FILE="$HOME/.cache/nightlight_state"
 
 # Helper: Get location from city
 get_location() {
