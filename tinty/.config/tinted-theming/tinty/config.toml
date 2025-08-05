@@ -47,7 +47,7 @@ supported-systems = ["base16", "base24"]
 
 # Rofi - custom template to match wofi style
 [[items]]
-path = "~/dotfiles/tinty-custom-templates/rofi"
+path = "~/.local/share/tinted-theming/tinty/repos/custom-rofi"
 name = "custom-rofi"
 themes-dir = "theme"
 hook = "cp -f %f ~/.config/rofi/theme.rasi"
