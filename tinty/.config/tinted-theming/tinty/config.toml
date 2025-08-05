@@ -29,29 +29,13 @@ themes-dir = "colors"
 hook = "cp -f %f ~/.config/tmux/colors.conf && tmux source-file ~/.config/tmux/tmux.conf 2>/dev/null || true"
 supported-systems = ["base16", "base24"]
 
-# Alacritty
-[[items]]
-path = "https://github.com/tinted-theming/tinted-alacritty"
-name = "tinted-alacritty"
-themes-dir = "colors"
-hook = "cp -f %f ~/.config/alacritty/theme.toml"
-supported-systems = ["base16", "base24"]
-
 # Ghostty
 [[items]]
-path = "https://github.com/tinted-theming/tinted-ghostty"
+path = "https://github.com/tinted-theming/tinted-terminal"
 name = "tinted-ghostty"
 themes-dir = "themes/ghostty"
 hook = "cp -f %f ~/.config/ghostty/theme"
 supported-systems = ["base16", "base24"]
-
-# Rofi - custom template to match wofi style
-[[items]]
-path = "~/.local/share/tinted-theming/tinty/repos/custom-rofi"
-name = "custom-rofi"
-themes-dir = "theme"
-hook = "cp -f %f ~/.config/rofi/theme.rasi"
-supported-systems = ["base16"]
 
 # Neovim
 [[items]]
@@ -61,25 +45,25 @@ themes-dir = "colors"
 hook = "cp -f %f ~/.config/nvim/colors/base16-current.vim"
 supported-systems = ["base16"]
 
-# Btop - commented out due to sync issues
-# [[items]]
-# path = "https://github.com/tinted-theming/base16-btop"
-# name = "base16-btop"
-# themes-dir = "themes"
-# hook = "cp -f %f ~/.config/btop/themes/base16.theme"
-# supported-systems = ["base16"]
+# Btop
+[[items]]
+path = "https://git.sr.ht/~blueingreen/base16-btop"
+name = "base16-btop"
+themes-dir = "colors"
+hook = "cp -f %f ~/.config/btop/themes/base16.theme"
+supported-systems = ["base16"]
 
-# Yazi - commented out as repo doesn't exist
+# Yazi - no base16/tinted theme support exists
 # [[items]]
-# path = "https://github.com/tinted-theming/base16-yazi"
-# name = "base16-yazi"
+# path = "https://github.com/tinted-theming/tinted-yazi"
+# name = "tinted-yazi"
 # themes-dir = "flavors"
 # hook = "cp -f %f ~/.config/yazi/theme.toml"
 # supported-systems = ["base16"]
 
 # Lazygit
 [[items]]
-path = "https://github.com/tinted-theming/base16-lazygit"
+path = "https://git.sr.ht/~blueingreen/base16-lazygit"
 name = "base16-lazygit"
 themes-dir = "colors"
 hook = "cp -f %f ~/.config/lazygit/theme.yml"
@@ -112,8 +96,9 @@ supported-systems = ["base16"]
 
 # Mako
 [[items]]
-path = "https://github.com/tinted-theming/base16-mako"
+path = "https://github.com/Eluminae/base16-mako"
 name = "base16-mako"
+revision = "master"
 themes-dir = "colors"
 hook = "cp -f %f ~/.config/mako/colors"
 supported-systems = ["base16"]
