@@ -10,9 +10,13 @@
   },
   "permission": {
     "bash": {
-      "find": "allow",
-      "grep": "allow"
-      "ls": "allow",
+      "find*": "allow",
+      "grep*": "allow",
+      "ls*": "allow",
+      "head*": "allow",
+      "tail*": "allow",
+      "git diff*": "allow",
+      "git show*": "allow",
       "*": "ask"
     }
   }
