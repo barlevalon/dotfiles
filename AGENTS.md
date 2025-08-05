@@ -17,23 +17,26 @@ Each directory is a "stow package" that gets symlinked to `$HOME`:
 - `fish/` - Fish shell config
 - etc.
 
+## Stow Usage with --no-folding
+When stowing directories that contain both version-controlled templates and generated files (like `tinty-custom-templates`), use `stow --no-folding` to prevent stow from creating directory-level symlinks. This ensures:
+- Template files are symlinked individually from dotfiles
+- Generated files can be created in the target location without polluting dotfiles
+- Example: `stow --no-folding tinty-custom-templates`
+
+This is particularly important for tinty custom templates where:
+- Templates (`.mustache` files) live in dotfiles and are symlinked
+- Generated theme files are created outside dotfiles in `~/.local/share/tinted-theming/tinty/repos/`
+
 ## Theme System
-The theme system allows switching between color schemes dynamically:
+The theme system uses [Tinty](https://github.com/tinted-theming/tinty) for managing base16/base24 color schemes across all applications. See `theme/README.md` for detailed documentation.
 
-### How it works
-1. Themes are stored in `theme/.config/theme/themes/`
-2. Each theme has config files for various apps (ghostty.conf, waybar.css, etc.)
-3. `~/.config/theme/current/theme` is a symlink to the active theme directory
-4. Apps import/source their theme config from the current theme
-5. `theme-set <theme-name>` switches themes and restarts affected apps
+### Quick Usage
+- `theme-set <name>` - Switch theme
+- `SUPER + T` - Theme menu
+- `bg-next` - Cycle backgrounds
+- Available themes: nord, gruvbox, tokyo-night, catppuccin, kanagawa, everforest, rose-pine, matte-black, and more
 
-### Available themes
-- nord, gruvbox, tokyo-night, catppuccin, kanagawa, everforest, rose-pine, matte-black
 
-### Adding theme support to an app
-1. Create `<app>.css/conf/toml` in each theme directory with color definitions
-2. Update the app's main config to import from `~/.config/theme/current/theme/<app>.css`
-3. Add restart logic to `theme-set` script if needed
 
 ## Key Commands
 - `make` in repo root - Shows available stow operations
