@@ -45,11 +45,11 @@ themes-dir = "themes/ghostty"
 hook = "cp -f %f ~/.config/ghostty/theme"
 supported-systems = ["base16", "base24"]
 
-# Rofi
+# Rofi - custom template to match wofi style
 [[items]]
-path = "https://github.com/tinted-theming/base16-rofi"
-name = "base16-rofi"
-themes-dir = "colors"
+path = "~/dotfiles/tinty-custom-templates/rofi"
+name = "custom-rofi"
+themes-dir = "theme"
 hook = "cp -f %f ~/.config/rofi/theme.rasi"
 supported-systems = ["base16"]
 
