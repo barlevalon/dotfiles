@@ -90,6 +90,9 @@ restart_ui_components() {
   pkill walker 2>/dev/null || true
   pkill rofi 2>/dev/null || true
   
+  # Generate rofi theme
+  "$HOME/dotfiles/theme/.config/theme/bin/generate-rofi-theme" 2>/dev/null || true
+  
   # Restart SwayOSD
   pkill swayosd-server 2>/dev/null || true
   uwsm app -- swayosd-server >/dev/null 2>&1 &

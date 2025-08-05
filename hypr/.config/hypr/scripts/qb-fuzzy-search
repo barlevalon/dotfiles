@@ -6,8 +6,7 @@ readonly HISTORY_LIMIT=500
 readonly SESSION_FILE="/tmp/qb-fuzzy-search-session.yml"
 readonly QB_CONFIG_DIR="$HOME/.config/qutebrowser"
 readonly QB_DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/qutebrowser"
-readonly CURRENT_THEME=$(cat "$HOME/.config/theme/current_theme" 2>/dev/null || echo "nord")
-readonly THEME_PATH="$HOME/dotfiles/theme/.config/theme/themes/$CURRENT_THEME/rofi.rasi"
+readonly THEME_PATH="$HOME/.config/rofi/theme.rasi"
 
 # Helper functions
 is_qb_running() {

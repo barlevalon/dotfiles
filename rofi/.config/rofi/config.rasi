@@ -1,6 +1,6 @@
 configuration {
     modi: "drun,run,window";
-    font: "CaskaydiaMono Nerd Font 16";
+    font: "MesloLGM Nerd Font Mono 14";
     show-icons: false;
     icon-theme: "Papirus";
     display-drun: "";
