@@ -1,0 +1,124 @@
+# Tinty configuration
+shell = "sh -c '{}'"
+default-scheme = "base16-nord"
+
+# Preferred themes for cycling
+preferred-schemes = ["base16-nord", "base16-gruvbox-dark-medium", "base16-tokyo-night-dark", "base16-catppuccin-mocha"]
+
+# Shell theme
+[[items]]
+path = "https://github.com/tinted-theming/tinted-shell"
+name = "tinted-shell"
+themes-dir = "scripts"
+hook = "source %f"
+supported-systems = ["base16", "base24"]
+
+# Waybar
+[[items]]
+path = "https://github.com/tinted-theming/base16-waybar"
+name = "base16-waybar"
+themes-dir = "colors"
+hook = "cp -f %f ~/.config/waybar/colors.css && pkill -SIGUSR2 waybar"
+supported-systems = ["base16"]
+
+# Tmux
+[[items]]
+path = "https://github.com/tinted-theming/tinted-tmux"
+name = "tinted-tmux"
+themes-dir = "colors"
+hook = "cp -f %f ~/.config/tmux/colors.conf && tmux source-file ~/.config/tmux/tmux.conf 2>/dev/null || true"
+supported-systems = ["base16", "base24"]
+
+# Alacritty
+[[items]]
+path = "https://github.com/tinted-theming/tinted-alacritty"
+name = "tinted-alacritty"
+themes-dir = "colors"
+hook = "cp -f %f ~/.config/alacritty/theme.toml"
+supported-systems = ["base16", "base24"]
+
+# Ghostty
+[[items]]
+path = "https://github.com/tinted-theming/tinted-ghostty"
+name = "tinted-ghostty"
+themes-dir = "themes/ghostty"
+hook = "cp -f %f ~/.config/ghostty/theme"
+supported-systems = ["base16", "base24"]
+
+# Rofi
+[[items]]
+path = "https://github.com/tinted-theming/base16-rofi"
+name = "base16-rofi"
+themes-dir = "colors"
+hook = "cp -f %f ~/.config/rofi/theme.rasi"
+supported-systems = ["base16"]
+
+# Neovim
+[[items]]
+path = "https://github.com/tinted-theming/base16-vim"
+name = "base16-vim"
+themes-dir = "colors"
+hook = "cp -f %f ~/.config/nvim/colors/base16-current.vim"
+supported-systems = ["base16"]
+
+# Btop - commented out due to sync issues
+# [[items]]
+# path = "https://github.com/tinted-theming/base16-btop"
+# name = "base16-btop"
+# themes-dir = "themes"
+# hook = "cp -f %f ~/.config/btop/themes/base16.theme"
+# supported-systems = ["base16"]
+
+# Yazi - commented out as repo doesn't exist
+# [[items]]
+# path = "https://github.com/tinted-theming/base16-yazi"
+# name = "base16-yazi"
+# themes-dir = "flavors"
+# hook = "cp -f %f ~/.config/yazi/theme.toml"
+# supported-systems = ["base16"]
+
+# Lazygit
+[[items]]
+path = "https://github.com/tinted-theming/base16-lazygit"
+name = "base16-lazygit"
+themes-dir = "colors"
+hook = "cp -f %f ~/.config/lazygit/theme.yml"
+supported-systems = ["base16"]
+
+# K9s - commented out as repo doesn't exist
+# [[items]]
+# path = "https://github.com/tinted-theming/base16-k9s"
+# name = "base16-k9s"
+# themes-dir = "dist"
+# hook = "cp -f %f ~/.config/k9s/skins/base16.yaml"
+# supported-systems = ["base16"]
+
+# Qutebrowser
+[[items]]
+path = "https://github.com/tinted-theming/base16-qutebrowser"
+name = "base16-qutebrowser"
+themes-dir = "themes/minimal"
+theme-file-extension = ".config.py"
+hook = "cp -f %f ~/.config/qutebrowser/theme.py"
+supported-systems = ["base16"]
+
+# Spotify Player - commented out as repo doesn't exist
+# [[items]]
+# path = "https://github.com/tinted-theming/base16-spotify-player"
+# name = "base16-spotify-player"
+# themes-dir = "themes"
+# hook = "cp -f %f ~/.config/spotify-player/theme.toml"
+# supported-systems = ["base16"]
+
+# Mako
+[[items]]
+path = "https://github.com/tinted-theming/base16-mako"
+name = "base16-mako"
+themes-dir = "colors"
+hook = "cp -f %f ~/.config/mako/colors"
+supported-systems = ["base16"]
+
+# Wofi - handled by custom generator since we need CSS variables
+
+# Custom Templates are handled by generate-custom-themes script
+# Hyprland, Starship, SwayOSD, Walker, Hyprlock use custom generators
