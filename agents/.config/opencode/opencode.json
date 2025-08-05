@@ -10,8 +10,10 @@
   },
   "permission": {
     "bash": {
-      "git push": "ask",
-      "*": "allow"
+      "find": "allow",
+      "grep": "allow"
+      "ls": "allow",
+      "*": "ask"
     }
   }
 }
