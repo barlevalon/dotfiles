@@ -5,5 +5,6 @@ idiomatic_version_file_enable_tools = ["ruby", "node"]
 ruby_build_opts = "CC=gcc-14 CXX=g++-14"
 
 [tools]
+go = "latest"
 node = "22"
 ruby = "latest"

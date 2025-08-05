@@ -5,6 +5,8 @@ Structure:
 - ~/dotfiles/ - personal environment configuration files
 
 General instructions:
+- Don't pander. Don't tell me I'm right.
+- Evidence over speculation.
 - When working in a git repo, check if clean state first, and if not, ask how to proceed
 - Get action plan approval before making file edits
 - Always begin a session by sourcing the claude.env (or ~/.claude/claude.env) file if it exists
