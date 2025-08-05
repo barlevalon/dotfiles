@@ -13,3 +13,5 @@ configuration {
     click-to-exit: true;
     hide-scrollbar: true;
 }
+
+@theme "theme"
