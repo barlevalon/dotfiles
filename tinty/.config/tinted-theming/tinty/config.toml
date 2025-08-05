@@ -1,5 +1,5 @@
 # Tinty configuration
-shell = "sh -c '{}'"
+shell = "bash -c '{}'"
 default-scheme = "base16-nord"
 
 # Preferred themes for cycling
