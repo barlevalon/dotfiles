@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# List currently set font
+echo "Current fonts:"
+echo "-------------"
+
+if [[ -f ~/.config/ghostty/config ]]; then
+  current_ghostty=$(grep "^font-family = " ~/.config/ghostty/config | sed 's/font-family = //')
+  echo "Ghostty:    $current_ghostty"
+fi
+
+
+
+if [[ -f ~/.config/waybar/style.css ]]; then
+  current_waybar=$(grep "font-family:" ~/.config/waybar/style.css | head -1 | sed 's/.*font-family: \(.*\);.*/\1/')
+  echo "Waybar:     $current_waybar"
+fi
+
+if [[ -f ~/.config/walker/themes/main.css ]]; then
+  current_walker=$(grep "font-family:" ~/.config/walker/themes/main.css | head -1 | sed "s/.*font-family: '\(.*\)',.*/\1/")
+  echo "Walker:     $current_walker"
+fi
+
+if [[ -f ~/.config/wofi/style.css ]]; then
+  current_wofi=$(grep "font-family:" ~/.config/wofi/style.css | head -1 | sed "s/.*font-family: '\(.*\)',.*/\1/")
+  echo "Wofi:       $current_wofi"
+fi
+
+echo ""
+echo "Available monospace fonts:"
+echo "-------------------------"
+
+# List available monospace fonts, prioritizing Nerd Fonts
+(
+  fc-list :mono family | sort -u | while read font; do
+    if [[ "$font" == *"Nerd Font"* ]]; then
+      echo "★ $font"
+    fi
+  done
+  fc-list :mono family | sort -u | while read font; do
+    if [[ "$font" != *"Nerd Font"* ]]; then
+      echo "  $font"
+    fi
+  done
+) | head -30

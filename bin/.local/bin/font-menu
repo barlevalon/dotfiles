@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Font menu for quick font switching using walker/rofi
+
+# Get list of available monospace fonts
+get_fonts() {
+  # Show Nerd Fonts first
+  fc-list :mono family | sort -u | grep "Nerd Font" | sed 's/,.*$//'
+  echo "---"
+  # Then other fonts
+  fc-list :mono family | sort -u | grep -v "Nerd Font" | head -20
+}
+
+# Show menu using walker (or rofi as fallback)
+if command -v walker &> /dev/null; then
+  selected=$(get_fonts | walker --dmenu --theme dmenu_250 -p "Select Font")
+elif command -v rofi &> /dev/null; then
+  selected=$(get_fonts | rofi -dmenu -p "Select Font")
+else
+  echo "Neither walker nor rofi found. Using terminal selection:"
+  font-list
+  read -p "Enter font name: " selected
+fi
+
+# Apply selected font
+if [[ -n "$selected" && "$selected" != "---" && "$selected" != "CNCLD" ]]; then
+  font-set "$selected"
+  notify-send "Font Changed" "Set to: $selected" -i preferences-desktop-font
+fi
