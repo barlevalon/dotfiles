@@ -7,7 +7,7 @@ This dotfiles setup uses [Tinty](https://github.com/tinted-theming/tinty) for th
 The theme system allows dynamic switching between color schemes with a single command, automatically updating all configured applications.
 
 ### Available Themes
-- **Dark themes**: nord, gruvbox, tokyo-night, catppuccin, kanagawa, everforest, rose-pine, matte-black, dune, monokai-pro-ristretto
+- **Dark themes**: nord, gruvbox, tokyo-night, catppuccin, kanagawa, everforest, rose-pine, matte-black, dune, monokai-pro-ristretto, osaka-jade
 - **Light themes**: catppuccin-latte, rose-pine-dawn
 
 ## Directory Structure
