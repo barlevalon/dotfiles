@@ -31,3 +31,7 @@
   color: @base;
   font-weight: bold;
 }
+
+#item.active {
+  font-style: italic;
+}
