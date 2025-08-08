@@ -273,4 +273,137 @@ generate_wofi
 generate_rofi
 generate_mako
 
-echo "Custom themes generated successfully"
+# Generate K9s skin
+get_current_slug() {
+  if [ -f "$HOME/.local/share/tinted-theming/tinty/current_scheme" ]; then
+    cat "$HOME/.local/share/tinted-theming/tinty/current_scheme"
+  elif [ -f "$HOME/.local/share/tinted-theming/tinty/artifacts/current_scheme" ]; then
+    cat "$HOME/.local/share/tinted-theming/tinty/artifacts/current_scheme"
+  else
+    echo "base16-current"
+  fi
+}
+
+generate_k9s() {
+  mkdir -p "$HOME/.config/k9s/skins"
+  local out_file="$HOME/.config/k9s/skins/base16.yaml"
+  cat > "$out_file" << EOF
+# Base16 Theme - Generated
+k9s:
+  body:
+    fgColor: "$base05"
+    bgColor: "default"
+    logoColor: "$base0E"
+  info:
+    fgColor: "$base0D"
+    sectionColor: "$base05"
+  dialog:
+    fgColor: "$base05"
+    bgColor: "default"
+    buttonFgColor: "$base05"
+    buttonBgColor: "$base0E"
+    buttonFocusFgColor: "$base0A"
+    buttonFocusBgColor: "$base0D"
+    labelFgColor: "$base0A"
+    fieldFgColor: "$base05"
+  frame:
+    border:
+      fgColor: "$base02"
+      focusColor: "$base02"
+    menu:
+      fgColor: "$base05"
+      keyColor: "$base0D"
+      numKeyColor: "$base0D"
+    crumbs:
+      fgColor: "$base05"
+      bgColor: "$base01"
+      activeColor: "$base01"
+    status:
+      newColor: "$base0C"
+      modifyColor: "$base0E"
+      addColor: "$base0B"
+      errorColor: "$base08"
+      highlightColor: "$base0A"
+      killColor: "$base03"
+      completedColor: "$base03"
+    title:
+      fgColor: "$base05"
+      bgColor: "$base01"
+      highlightColor: "$base0A"
+      counterColor: "$base0E"
+      filterColor: "$base0D"
+  views:
+    charts:
+      bgColor: "default"
+      defaultDialColors:
+      - "$base0E"
+      - "$base08"
+      defaultChartColors:
+      - "$base0E"
+      - "$base08"
+    table:
+      fgColor: "$base05"
+      bgColor: "default"
+      header:
+        fgColor: "$base05"
+        bgColor: "default"
+        sorterColor: "$base0C"
+    xray:
+      fgColor: "$base05"
+      bgColor: "default"
+      cursorColor: "$base01"
+      graphicColor: "$base0E"
+      showIcons: false
+    yaml:
+      keyColor: "$base0D"
+      colonColor: "$base0E"
+      valueColor: "$base05"
+    logs:
+      fgColor: "$base05"
+      bgColor: "default"
+      indicator:
+        fgColor: "$base05"
+        bgColor: "$base0E"
+        toggleOnColor: "$base0B"
+        toggleOffColor: "$base0D"
+EOF
+}
+
+generate_k9s
+
+# Ensure K9s uses the base16 skin name in config
+ensure_k9s_skin() {
+  local cfg="$HOME/.config/k9s/config.yaml"
+  mkdir -p "$HOME/.config/k9s"
+  local skin_name="base16"
+  if command -v yq >/dev/null 2>&1; then
+    if [ -f "$cfg" ]; then
+      yq -i "del(.k9s.skin) | .k9s.ui.skin = \"${skin_name}\"" "$cfg" || true
+    else
+      printf "k9s:\n  ui:\n    skin: %s\n" "$skin_name" > "$cfg"
+    fi
+  else
+    if [ ! -f "$cfg" ]; then
+      printf "k9s:\n  ui:\n    skin: %s\n" "$skin_name" > "$cfg"
+    else
+      # Remove any top-level k9s.skin entries
+      awk 'BEGIN{skip=0}
+           /^\s*skin:\s*/ && prev ~ /^k9s:/ {next}
+           {print; prev=$0}' "$cfg" > "$cfg.tmp" && mv "$cfg.tmp" "$cfg"
+
+      if grep -q '^\s*ui:\s*$' "$cfg"; then
+        awk -v name="$skin_name" 'BEGIN{ui=0}
+             /^\s*ui:\s*$/ {ui=1; print; next}
+             ui==1 && /^\s*skin:\s*/ {print "    skin: " name; ui=0; next}
+             /^\s*[^ ]/ {ui=0}
+             {print}' "$cfg" > "$cfg.tmp" && mv "$cfg.tmp" "$cfg"
+      else
+        awk -v name="$skin_name" 'BEGIN{printed=0} {print} /^k9s:\s*$/ && !printed {print "  ui:\n    skin: " name; printed=1}' "$cfg" > "$cfg.tmp" && mv "$cfg.tmp" "$cfg"
+      fi
+    fi
+  fi
+}
+
+ensure_k9s_skin
+
+ echo "Custom themes generated successfully"
