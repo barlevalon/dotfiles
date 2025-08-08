@@ -2,14 +2,13 @@ os:
   editPreset: 'nvim-remote'
 git:
   disableForcePushing: true
-
 customCommands:
   - key: "o"
     command: "nvim -c ':Octo pr create'"
     context: "localBranches"
     loadingText: "Loading Octo"
     description: "Open pull request with Octo"
-    subprocess: true
+    output: terminal
 keybinding:
   branches:
     createPullRequest: "O"
