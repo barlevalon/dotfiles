@@ -192,103 +192,12 @@ format = '\[[$symbol($version)]($style)\]'
 [zig]
 format = '\[[$symbol($version)]($style)\]'
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+[custom.reboot]
+command = """[ "$(uname -r | sed 's/-arch/.arch/')" != "$(pacman -Q linux 2>/dev/null | awk '{print $2}')" ] && echo "↻ reboot" || true"""
+when = "test -f /usr/bin/pacman"
+style = "bold yellow"
+format = '\[[$output]($style)\]'
+description = "Shows when kernel update requires reboot"
 
 [palettes.base16]
 base00 = "#2e3440"
@@ -307,10 +216,3 @@ base0C = "#88c0d0"
 base0D = "#81a1c1"
 base0E = "#b48ead"
 base0F = "#5e81ac"
-
-[custom.reboot]
-command = """[ "$(uname -r | sed 's/-arch/.arch/')" != "$(pacman -Q linux 2>/dev/null | awk '{print $2}')" ] && echo "↻ reboot" || true"""
-when = "test -f /usr/bin/pacman"
-style = "bold yellow"
-format = '\[[$output]($style)\]'
-description = "Shows when kernel update requires reboot"
