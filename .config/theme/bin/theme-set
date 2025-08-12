@@ -57,29 +57,28 @@ update_starship_theme() {
     sed -i '/^command_timeout/a palette = "base16"' "$config_file"
   fi
   
-  # Save any custom sections that come after palettes
+  # Create a backup and new file
   local temp_file=$(mktemp)
-  awk '
-    /^\[palettes\./ { in_palette=1 }
-    /^\[/ && !/^\[palettes\./ { in_palette=0 }
-    in_palette { next }
-    /^\[custom\./ { found_custom=1 }
-    found_custom { print }
-  ' "$config_file" > "$temp_file"
+  local in_palette=0
   
-  # Remove old palette definitions
-  sed -i '/^\[palettes\./,$d' "$config_file"
+  # Process the file line by line
+  while IFS= read -r line; do
+    if [[ "$line" =~ ^\[palettes\.base16\] ]]; then
+      # Start of palette section - insert new palette
+      cat "$theme_file" | grep -A 1000 "^\[palettes\."
+      in_palette=1
+    elif [[ $in_palette -eq 1 && "$line" =~ ^\[.*\] ]]; then
+      # End of palette section - print this line and continue
+      echo "$line"
+      in_palette=0
+    elif [[ $in_palette -eq 0 ]]; then
+      # Not in palette section - keep the line as-is
+      echo "$line"
+    fi
+  done < "$config_file" > "$temp_file"
   
-  # Append new palette
-  echo "" >> "$config_file"
-  cat "$theme_file" | grep -A 1000 "^\[palettes\." >> "$config_file"
-  
-  # Restore custom sections if they exist
-  if [ -s "$temp_file" ]; then
-    echo "" >> "$config_file"
-    cat "$temp_file" >> "$config_file"
-  fi
-  rm -f "$temp_file"
+  # Replace the original file
+  mv "$temp_file" "$config_file"
 }
 
 # Update GNOME theme based on light/dark
