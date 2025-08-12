@@ -1,3 +1,3 @@
-function dots
- git --git-dir=$HOME/.dots/ --work-tree $HOME $argv
+function dots -w git
+ git --git-dir=$HOME/.dotfiles.git/ --work-tree $HOME $argv
 end
