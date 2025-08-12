@@ -1,0 +1,4 @@
+# Make mise-managed tools available in GUI applications
+if command -v mise &> /dev/null; then
+  eval "$(mise activate bash)"
+fi
