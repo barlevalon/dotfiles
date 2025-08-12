@@ -2,30 +2,33 @@
 
 ## Overview
 - Personal dotfiles for system and app configurations
-- Managed with GNU Stow for symlink management
-- All symlinks should be relative for portability
+- Managed as a bare Git repository for direct tracking in `$HOME`
 - Branch structure: `arch` for Arch Linux, `main` for macOS
 - Based on and inspired by github.com/basecamp/omarchy
 
+## Setup & Usage
+This repository uses the bare repo method for dotfile management:
+- Git directory: `~/.dotfiles.git/`
+- Work tree: `$HOME`
+- Fish functions: `dots` (git wrapper), `ldots` (lazygit wrapper)
+
+### Commands
+- `dots status` - Check status of tracked files
+- `dots add <file>` - Track a new config file
+- `dots commit -m "message"` - Commit changes
+- `dots push` - Push to remote
+- `ldots` - Open lazygit for visual management
+
 ## Structure
-Each directory is a "stow package" that gets symlinked to `$HOME`:
-- `hypr/` - Hyprland window manager config
-- `theme/` - Theme system and color schemes
-- `waybar/` - Status bar configuration
-- `tmux/` - Terminal multiplexer config
-- `nvim/` - Neovim configuration
-- `fish/` - Fish shell config
+Configuration files are organized in their standard locations:
+- `.config/hypr/` - Hyprland window manager config
+- `.config/theme/` - Theme system and color schemes
+- `.config/waybar/` - Status bar configuration
+- `.config/tmux/` - Terminal multiplexer config
+- `.config/nvim/` - Neovim configuration
+- `.config/fish/` - Fish shell config
+- `.local/` - User binaries and data
 - etc.
-
-## Stow Usage with --no-folding
-When stowing directories that contain both version-controlled templates and generated files (like `tinty-custom-templates`), use `stow --no-folding` to prevent stow from creating directory-level symlinks. This ensures:
-- Template files are symlinked individually from dotfiles
-- Generated files can be created in the target location without polluting dotfiles
-- Example: `stow --no-folding tinty-custom-templates`
-
-This is particularly important for tinty custom templates where:
-- Templates (`.mustache` files) live in dotfiles and are symlinked
-- Generated theme files are created outside dotfiles in `~/.local/share/tinted-theming/tinty/repos/`
 
 ## Theme System
 The theme system uses [Tinty](https://github.com/tinted-theming/tinty) for managing base16/base24 color schemes across all applications. See `theme/README.md` for detailed documentation.
@@ -39,7 +42,8 @@ The theme system uses [Tinty](https://github.com/tinted-theming/tinty) for manag
 
 
 ## Key Commands
-- `make` in repo root - Shows available stow operations
+- `dots` - Git commands for dotfiles management
+- `ldots` - Lazygit for visual dotfiles management
 - `theme-set <name>` - Switch theme
 - `bg-next` - Cycle through theme backgrounds
 - `SUPER + T` - Theme menu
