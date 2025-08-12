@@ -288,6 +288,8 @@ format = '\[[$symbol($version)]($style)\]'
 
 
 
+
+
 [palettes.base16]
 base00 = "#2e3440"
 base01 = "#3b4252"

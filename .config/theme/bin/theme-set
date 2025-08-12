@@ -57,10 +57,29 @@ update_starship_theme() {
     sed -i '/^command_timeout/a palette = "base16"' "$config_file"
   fi
   
-  # Remove old palette definitions and append new ones
+  # Save any custom sections that come after palettes
+  local temp_file=$(mktemp)
+  awk '
+    /^\[palettes\./ { in_palette=1 }
+    /^\[/ && !/^\[palettes\./ { in_palette=0 }
+    in_palette { next }
+    /^\[custom\./ { found_custom=1 }
+    found_custom { print }
+  ' "$config_file" > "$temp_file"
+  
+  # Remove old palette definitions
   sed -i '/^\[palettes\./,$d' "$config_file"
+  
+  # Append new palette
   echo "" >> "$config_file"
   cat "$theme_file" | grep -A 1000 "^\[palettes\." >> "$config_file"
+  
+  # Restore custom sections if they exist
+  if [ -s "$temp_file" ]; then
+    echo "" >> "$config_file"
+    cat "$temp_file" >> "$config_file"
+  fi
+  rm -f "$temp_file"
 }
 
 # Update GNOME theme based on light/dark
