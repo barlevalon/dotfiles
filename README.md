@@ -3,7 +3,6 @@
 ## Overview
 - Personal dotfiles for macOS system and app configurations
 - Managed as a bare Git repository for direct tracking in `$HOME`
-- Based on and inspired by github.com/basecamp/omarchy
 
 ## Setup & Usage
 This repository uses the bare repo method for dotfile management:
@@ -13,10 +12,12 @@ This repository uses the bare repo method for dotfile management:
 
 ### Initial Setup (for new machines)
 ```bash
-git clone --bare https://github.com/YOUR_USERNAME/dotfiles.git $HOME/.dotfiles.git
+git clone --bare https://github.com/barlevalon/dotfiles.git $HOME/.dotfiles.git
 alias dots='git --git-dir=$HOME/.dotfiles.git/ --work-tree=$HOME'
-dots checkout
+alias ldots='lazygit --git-dir=$HOME/.dotfiles.git/ --work-tree=$HOME'
+dots checkout [branch]
 dots config --local status.showUntrackedFiles no
+dots config --local remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
 ```
 
 ### Daily Usage
@@ -42,6 +43,6 @@ Configuration files are organized by application:
 Each directory contains files that will be placed in the appropriate location in `$HOME` (usually under `.config/`).
 
 ## Package Management
-- `.Brewfile` - Contains all Homebrew packages, casks, and Mac App Store apps
+- `packages/Brewfile` - Contains all Homebrew packages, casks, and Mac App Store apps
 - `brew bundle` - Install all packages from Brewfile
 - `brew bundle dump` - Update Brewfile with currently installed packages
