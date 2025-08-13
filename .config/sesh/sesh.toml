@@ -1,0 +1,19 @@
+[[session]]
+name = "scratch"
+path = "~"
+
+[[session]]
+name = "alon-pc 🖥️"
+path = "~"
+startup_command = "ssh alon@alon-pc"
+
+[[session]]
+name = "mini"
+path = "~"
+startup_command = "ssh hearter@mini"
+
+[[session]]
+name = "kielbasa 🎥"
+path = "~"
+startup_command = "ssh k"
+
