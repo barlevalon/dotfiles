@@ -2,12 +2,11 @@ Structure:
 - ~/work/ - work-related repos and projects
 - ~/personal/ - non-work repos and projects
 - ~/notes/ - daily notes, dev journals, general context (read its agents file for more info)
-- ~/dotfiles/ - personal environment configuration files
+- ~/.dotfiles.git/ - bare git repo of personal environment configuration files
 
 General instructions:
 - When working in a git repo, check if clean state first, and if not, ask how to proceed
 - Get action plan approval before making file edits
-- Always begin a session by sourcing the claude.env (or ~/.claude/claude.env) file if it exists
 - Use tmux to run sudo or long-running commands:
   - Create session first: `tmux new-session -d -s session-name` or attach to existing
   - Send command: `tmux send-keys -t session-name 'command' Enter`
@@ -16,8 +15,7 @@ General instructions:
   - Monitor progress with: `tmux capture-pane -t session-name -p | tail -50`
   - NEVER kill the tmux session - let commands complete naturally
 
-## Git or jj Commit Guidelines (CRITICAL - HIGHEST PRECEDENCE)
-- if repo is configured for it, use jj. if it is not, ask me whether to jj init
+## Git Commit Guidelines (CRITICAL)
 - **NEVER include AI attribution in commits** - no "Generated with", no "Co-Authored-By" AI tools
 - **NEVER mention claude, opencode, or any AI assistant** in commit messages, PRs, or code comments
 - **ALWAYS write commit messages as if you were the developer** making the changes
@@ -25,7 +23,7 @@ General instructions:
 Available commands:
 - jj
 - git
-- gh (source ~/AGENTS.env for auth token)
+- gh
 - jira
 - kubectl
 - aws
