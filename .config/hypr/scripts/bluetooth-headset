@@ -1,0 +1,32 @@
+#!/bin/bash
+
+BOSE_MAC="04:52:C7:C3:12:29"
+SONY_MAC="88:C9:E8:F8:51:7B"
+
+# Function to connect to a device
+connect_device() {
+    local mac=$1
+    local name=$2
+    
+    # Use timeout to limit connection attempt to 3 seconds
+    if timeout 3 bluetoothctl connect "$mac" 2>/dev/null; then
+        notify-send "Bluetooth" "Connected to $name"
+        return 0
+    fi
+    return 1
+}
+
+# Check if Bose is already connected
+if bluetoothctl info "$BOSE_MAC" | grep -q "Connected: yes"; then
+    bluetoothctl disconnect "$BOSE_MAC"
+    notify-send "Bluetooth" "Disconnected from Bose QC35"
+# Check if Sony is already connected
+elif bluetoothctl info "$SONY_MAC" | grep -q "Connected: yes"; then
+    bluetoothctl disconnect "$SONY_MAC"
+    notify-send "Bluetooth" "Disconnected from Sony WF-1000XM4"
+# Try to connect - Bose first, then Sony
+else
+    if ! connect_device "$BOSE_MAC" "Bose QC35"; then
+        connect_device "$SONY_MAC" "Sony WF-1000XM4"
+    fi
+fi
