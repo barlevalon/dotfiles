@@ -64,7 +64,6 @@ keybindings:
 
 repoPaths:
   barlevalon/*: ~/personal/*
-  barlevalon/dotfiles: ~/dotfiles
   sibp/*: ~/work/*
 
 theme:
