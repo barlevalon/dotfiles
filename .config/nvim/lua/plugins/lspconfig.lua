@@ -2,7 +2,7 @@ return {
 	"neovim/nvim-lspconfig",
 	event = { "BufReadPre", "BufNewFile" },
 	dependencies = {
-		"hrsh7th/cmp-nvim-lsp",
+		"saghen/blink.cmp",
 		"b0o/schemastore.nvim",
 		{ "antosha417/nvim-lsp-file-operations", config = true },
 	},
@@ -15,15 +15,34 @@ return {
 		vim.keymap.del("n", "gri")
 		vim.keymap.del("n", "grt")
 
-		local cmp_nvim_lsp = require("cmp_nvim_lsp")
-		local capabilities = cmp_nvim_lsp.default_capabilities()
+		local capabilities = require("blink.cmp").get_lsp_capabilities()
 
-		-- Configure diagnostic signs
-		local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
+		-- Configure diagnostic signs (modern approach)
+		local signs = {
+			Error = " ",
+			Warn = " ",
+			Hint = "󰌵 ",
+			Info = " ",
+		}
+
+		local signConf = {
+			text = {},
+			texthl = {},
+			numhl = {},
+		}
+
 		for type, icon in pairs(signs) do
+			local severityName = string.upper(type)
+			local severity = vim.diagnostic.severity[severityName]
 			local hl = "DiagnosticSign" .. type
-			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+			signConf.text[severity] = icon
+			signConf.texthl[severity] = hl
+			signConf.numhl[severity] = hl
 		end
+
+		vim.diagnostic.config({
+			signs = signConf,
+		})
 
 		-- Set up keymaps when LSP attaches to a buffer
 		vim.api.nvim_create_autocmd("LspAttach", {
@@ -118,20 +137,5 @@ return {
 				},
 			},
 		})
-
-		local capabilities = cmp_nvim_lsp.default_capabilities()
-
-		local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
-		for type, icon in pairs(signs) do
-			local hl = "DiagnosticSign" .. type
-			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
-		end
-
-		-- Setup each LSP server with our common on_attach and capabilities
-		-- This approach avoids the duplicate server issue by using LspAttach autocmd
-
-		-- Store common config for reuse
-		_G.lsp_common_on_attach = on_attach
-		_G.lsp_common_capabilities = capabilities
 	end,
 }
