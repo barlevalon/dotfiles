@@ -19,7 +19,7 @@ return {
 		local capabilities = cmp_nvim_lsp.default_capabilities()
 
 		-- Configure diagnostic signs
-		local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
+		local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
 		for type, icon in pairs(signs) do
 			local hl = "DiagnosticSign" .. type
 			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
@@ -30,7 +30,7 @@ return {
 			group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true }),
 			callback = function(event)
 				local opts = { buffer = event.buf, noremap = true, silent = true }
-				
+
 				opts.desc = "Hover"
 				vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
 
@@ -77,7 +77,7 @@ return {
 		-- Configure specific servers with custom settings
 		-- These will be picked up automatically when servers are enabled
 		local lspconfig = require("lspconfig")
-		
+
 		-- Configure servers that need special settings
 		lspconfig.lua_ls.setup({
 			capabilities = capabilities,
@@ -129,7 +129,7 @@ return {
 
 		-- Setup each LSP server with our common on_attach and capabilities
 		-- This approach avoids the duplicate server issue by using LspAttach autocmd
-		
+
 		-- Store common config for reuse
 		_G.lsp_common_on_attach = on_attach
 		_G.lsp_common_capabilities = capabilities
