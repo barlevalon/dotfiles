@@ -1,5 +1,5 @@
 return {
-	"epwalsh/obsidian.nvim",
+	"obsidian-nvim/obsidian.nvim",
 	version = "*",
 	lazy = true,
 	event = {
@@ -10,7 +10,7 @@ return {
 	dependencies = {
 		-- Required.
 		"nvim-lua/plenary.nvim",
-		"hrsh7th/nvim-cmp",
+		"saghen/blink.cmp",
 		"nvim-telescope/telescope.nvim",
 		"nvim-treesitter/nvim-treesitter",
 	},
@@ -24,5 +24,6 @@ return {
 		daily_notes = {
 			folder = "Daily",
 		},
+		legacy_commands = false,
 	},
 }
