@@ -41,10 +41,15 @@ return {
 				"ansiblels",
 				"bashls",
 				"golangci_lint_ls",
+				"jsonls", -- Added for schemastore support
 			},
-			-- auto-install configured servers (with lspconfig)
-			automatic_installation = true, -- not the same as ensure_installed
+			-- Automatically enable all installed servers (except those we exclude)
+			automatic_enable = {
+				exclude = { "golangci_lint_ls" }
+			},
 		})
+
+
 
 		mason_tool_installer.setup({
 			ensure_installed = {
