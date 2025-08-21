@@ -15,6 +15,8 @@ opt.termguicolors = true
 opt.signcolumn = "yes"
 opt.swapfile = false
 opt.scrolloff = 10
+opt.smoothscroll = true  -- Smooth scrolling for <C-d>, <C-u>, etc.
+opt.updatetime = 250  -- Faster CursorHold events (default: 4000)
 opt.undofile = true
 opt.hlsearch = true
 
