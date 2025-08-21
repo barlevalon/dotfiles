@@ -1,5 +1,15 @@
 return {
 	{
+		"echasnovski/mini.pairs",
+		event = "InsertEnter",
+		config = function()
+			require("mini.pairs").setup({
+				-- In which modes mappings from this plugin should be applied
+				modes = { insert = true, command = false, terminal = false },
+			})
+		end,
+	},
+	{
 		"echasnovski/mini.ai",
 		keys = {
 			{ "a", mode = { "x", "o" } },
