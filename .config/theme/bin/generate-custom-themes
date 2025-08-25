@@ -258,6 +258,22 @@ border-color=$base0D
 EOF
 }
 
+generate_chromium() {
+  hex_to_rgb_comma() {
+    local hex="${1#\#}"
+    printf "%d,%d,%d" 0x${hex:0:2} 0x${hex:2:2} 0x${hex:4:2}
+  }
+  
+  local rgb_color=$(hex_to_rgb_comma "$base00")
+  
+  mkdir -p "$HOME/.config/chromium"
+  echo "$rgb_color" > "$HOME/.config/chromium/theme-color"
+  
+  if command -v chromium &>/dev/null; then
+    chromium --no-startup-window --set-theme-color="$rgb_color" 2>/dev/null || true
+  fi
+}
+
 # Main
 get_base16_colors || { echo "Failed to get base16 colors"; exit 1; }
 
@@ -272,6 +288,7 @@ generate_fish
 generate_wofi
 generate_rofi
 generate_mako
+generate_chromium
 
 # Generate K9s skin
 get_current_slug() {
