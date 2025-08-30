@@ -1,6 +1,6 @@
 return {
 	{
-		"echasnovski/mini.bufremove",
+		"nvim-mini/mini.bufremove",
 		version = false,
 		opts = {},
 	},
