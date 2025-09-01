@@ -42,5 +42,6 @@ while true; do
       cleanup
     fi
   done
+  sleep 2
 done
 '
