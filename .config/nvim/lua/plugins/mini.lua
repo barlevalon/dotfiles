@@ -1,6 +1,6 @@
 return {
 	{
-		"echasnovski/mini.pairs",
+		"nvim-mini/mini.pairs",
 		event = "InsertEnter",
 		config = function()
 			require("mini.pairs").setup({
@@ -10,7 +10,7 @@ return {
 		end,
 	},
 	{
-		"echasnovski/mini.ai",
+		"nvim-mini/mini.ai",
 		keys = {
 			{ "a", mode = { "x", "o" } },
 			{ "i", mode = { "x", "o" } },
@@ -74,7 +74,7 @@ return {
 			for key, value in pairs(i) do
 				table.insert(mappings, { "i" .. key, desc = value.name })
 			end
-			-- Add around textobject mappings  
+			-- Add around textobject mappings
 			for key, value in pairs(a) do
 				table.insert(mappings, { "a" .. key, desc = value.name })
 			end
@@ -82,7 +82,7 @@ return {
 		end,
 	},
 	{
-		"echasnovski/mini.surround",
+		"nvim-mini/mini.surround",
 		keys = function(_, keys)
 			-- Populate the keys based on the user's options
 			local plugin = require("lazy.core.config").spec.plugins["mini.surround"]
@@ -114,3 +114,4 @@ return {
 		},
 	},
 }
+
