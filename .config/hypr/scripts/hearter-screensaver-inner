@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+# Inner script for hearter screensaver launched inside Ghostty
+# Expects CURRENT_TIMEOUT in environment (set by outer script)
+
+# Save terminal settings and set raw mode to catch any key
+saved_tty=$(stty -g)
+stty -echo -icanon min 0 time 0
+# Allow terminal size to settle before first effect
+sleep 0.5
+
+cleanup() {
+    stty "$saved_tty"
+    # Restore cursor timeout setting
+    hyprctl keyword cursor:inactive_timeout $CURRENT_TIMEOUT
+    exit 0
+}
+trap cleanup EXIT INT TERM
+
+# Build dynamic effects list by extracting brace-enclosed choices from usage (may be multi-line).
+# Fallback to full known static list if parse yields too few entries.
+effects=()
+if effects_output=$(tte --help 2>&1); then
+  brace_block=$(printf '%s' "$effects_output" | tr '\n' ' ' | sed -n 's/.*{\([^}]*\)}.*/\1/p')
+  if [ -n "$brace_block" ]; then
+    IFS=',' read -r -a raw_effects <<< "$brace_block"
+    for e in "${raw_effects[@]}"; do
+      e=$(echo "$e" | tr -d '[:space:]')
+      [ -n "$e" ] && effects+=("$e")
+    done
+  fi
+fi
+if [ ${#effects[@]} -lt 5 ]; then
+  effects=(beams binarypath blackhole bouncyballs bubbles burn colorshift crumble decrypt errorcorrect expand fireworks highlight laseretch matrix middleout orbittingvolley overflow pour print rain randomsequence rings scattered slice slide spotlights spray swarm sweep synthgrid unstable vhstape waves wipe)
+fi
+
+while true; do
+  effect=${effects[$RANDOM % ${#effects[@]}]}
+  # Position at top-left before starting effect
+  printf "\e[H"
+  # Compute reserved height (leave 2 lines to prevent drift)
+  lines=$(tput lines); canvas_height=$((lines - 2)); if [ "$canvas_height" -lt 1 ]; then canvas_height=$lines; fi
+  # Run effect in background
+  tte -i ~/.config/hypr/assets/hearter-ascii.txt --frame-rate 240 --canvas-width 0 --canvas-height "$canvas_height" --anchor-canvas c --anchor-text c "$effect" &
+  tte_pid=$!
+
+  # Wait for any key press or effect completion
+  while kill -0 $tte_pid 2>/dev/null; do
+    if read -n 1 -t 0.1; then
+      kill $tte_pid 2>/dev/null
+      exit 0
+    fi
+  done
+
+  # Reposition immediately after effect ends to prevent drift during pause
+  printf "\e[H"
+
+  sleep 2
+done
