@@ -1,0 +1,5 @@
+#!/bin/bash
+# Force launch a webapp in Chromium (for sites that don't work well in qutebrowser)
+# Use this for Discord, Teams, etc.
+
+exec chromium --app="$1" "${@:2}"

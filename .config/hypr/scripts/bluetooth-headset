@@ -26,6 +26,7 @@ elif bluetoothctl info "$SONY_MAC" | grep -q "Connected: yes"; then
     notify-send "Bluetooth" "Disconnected from Sony WF-1000XM4"
 # Try to connect - Bose first, then Sony
 else
+    notify-send "Bluetooth" "Attempting to connect..."
     if ! connect_device "$BOSE_MAC" "Bose QC35"; then
         connect_device "$SONY_MAC" "Sony WF-1000XM4"
     fi

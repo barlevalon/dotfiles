@@ -1,0 +1,18 @@
+#!/bin/bash
+# Launch a webapp using the default browser (usually qutebrowser)
+# Use launch-chromium-webapp for sites that need Chromium
+
+browser_desktop=$(xdg-settings get default-web-browser)
+browser_exec=$(sed -n 's/^Exec=\([^ ]*\).*/\1/p' ~/.local/share/applications/$browser_desktop /usr/share/applications/$browser_desktop 2>/dev/null | head -1)
+
+if [ -z "$browser_exec" ]; then
+    browser_exec="qutebrowser"
+fi
+
+# For qutebrowser, use the webapp-style settings
+if [[ "$browser_exec" == *"qutebrowser"* ]]; then
+    exec $browser_exec --target window --set tabs.show never --set statusbar.show never "$@"
+else
+    # For Chromium-based browsers, use --app mode
+    exec $browser_exec --app="$1" "${@:2}"
+fi
