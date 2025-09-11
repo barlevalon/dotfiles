@@ -10,12 +10,18 @@ MODULE_LOADED=$(lsmod | grep -c v4l2loopback)
 
 # Function to start the flipped webcam
 start_flip() {
-    # Load v4l2loopback if not already loaded
+    # Ensure v4l2loopback is loaded (module should be preloaded at boot)
     if [ "$MODULE_LOADED" -eq 0 ]; then
-        sudo modprobe v4l2loopback devices=1 video_nr=10 card_label="Flipped Camera" exclusive_caps=1
-        sleep 1
+        notify-send "Webcam Flip" "v4l2loopback not loaded. Load as root:\nmodprobe v4l2loopback devices=1 video_nr=10 card_label=\"Flipped Camera\" exclusive_caps=1" -t 5000
+        return 1
     fi
-    
+
+    # Ensure output loopback device exists
+    if [ ! -e "$VIDEO_OUT" ]; then
+        notify-send "Webcam Flip" "Loopback device $VIDEO_OUT missing (load module with video_nr=10)" -t 4000
+        return 1
+    fi
+
     # Kill any process using the webcam
     fuser -k "$VIDEO_IN" 2>/dev/null
     sleep 0.5
