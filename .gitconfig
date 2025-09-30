@@ -13,7 +13,7 @@
 [rebase]
 	autoStash = true
 [init]
-	defaultBranch = main
+	defaultBranch = master
 [rerere]
 	enabled = true
 [column]
