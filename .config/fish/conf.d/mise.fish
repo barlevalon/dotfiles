@@ -1,1 +1,1 @@
-/home/alon/.local/bin/mise activate fish | source
+/usr/bin/mise activate fish | source
