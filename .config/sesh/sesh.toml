@@ -17,3 +17,7 @@ name = "kielbasa 🎥"
 path = "~/personal/kielbasa/"
 startup_command = "ssh k"
 
+[[session]]
+name = "irssi"
+path = "~"
+startup_command = "irssi"
