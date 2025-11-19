@@ -95,10 +95,9 @@ return {
 
 		-- Configure specific servers with custom settings
 		-- These will be picked up automatically when servers are enabled
-		local lspconfig = require("lspconfig")
 
 		-- Configure servers that need special settings
-		lspconfig.lua_ls.setup({
+		vim.lsp.config("lua_ls", {
 			capabilities = capabilities,
 			settings = {
 				Lua = {
@@ -114,8 +113,9 @@ return {
 				},
 			},
 		})
+		vim.lsp.enable("lua_ls")
 
-		lspconfig.yamlls.setup({
+		vim.lsp.config("yamlls", {
 			capabilities = capabilities,
 			settings = {
 				yaml = {
@@ -127,8 +127,9 @@ return {
 				},
 			},
 		})
+		vim.lsp.enable("yamlls")
 
-		lspconfig.jsonls.setup({
+		vim.lsp.config("jsonls", {
 			capabilities = capabilities,
 			settings = {
 				json = {
@@ -137,5 +138,6 @@ return {
 				},
 			},
 		})
+		vim.lsp.enable("jsonls")
 	end,
 }
