@@ -12,14 +12,6 @@ return {
 		quickfile = { enabled = true },
 		-- statuscolumn = { enabled = true },
 		-- words = { enabled = true },
-		lazygit = {
-			-- Ensure LazyGit uses both config and theme when launched inside Neovim
-			env = {
-				LG_CONFIG_FILE = (vim.env.HOME or os.getenv("HOME"))
-					.. "/.config/lazygit/config.yml,"
-					.. (vim.env.HOME or os.getenv("HOME")) .. "/.config/lazygit/theme.yml",
-			},
-		},
 		picker = {
 			sources = {
 				files = {
