@@ -1,0 +1,67 @@
+#!/bin/bash
+
+# Webcam flip toggle script for Hyprland
+# Flips webcam vertically using ffmpeg and v4l2loopback
+
+PIDFILE="/tmp/webcam-flip.pid"
+VIDEO_IN="/dev/video0"
+VIDEO_OUT="/dev/video10"
+MODULE_LOADED=$(lsmod | grep -c v4l2loopback)
+
+# Function to start the flipped webcam
+start_flip() {
+    # Ensure v4l2loopback is loaded (module should be preloaded at boot)
+    if [ "$MODULE_LOADED" -eq 0 ]; then
+        notify-send "Webcam Flip" "v4l2loopback not loaded. Load as root:\nmodprobe v4l2loopback devices=1 video_nr=10 card_label=\"Flipped Camera\" exclusive_caps=1" -t 5000
+        return 1
+    fi
+
+    # Ensure output loopback device exists
+    if [ ! -e "$VIDEO_OUT" ]; then
+        notify-send "Webcam Flip" "Loopback device $VIDEO_OUT missing (load module with video_nr=10)" -t 4000
+        return 1
+    fi
+
+    # Kill any process using the webcam
+    fuser -k "$VIDEO_IN" 2>/dev/null
+    sleep 0.5
+    
+    # Start ffmpeg in background
+    ffmpeg -f v4l2 -input_format mjpeg -framerate 30 -video_size 1280x720 -i "$VIDEO_IN" \
+           -vf vflip -pix_fmt yuv420p -f v4l2 "$VIDEO_OUT" \
+           </dev/null >/dev/null 2>&1 &
+    
+    # Save PID
+    echo $! > "$PIDFILE"
+    
+    # Check if started successfully
+    sleep 0.5
+    if kill -0 $! 2>/dev/null; then
+        notify-send "Webcam Flip" "Flipped webcam started on $VIDEO_OUT" -t 2000
+    else
+        notify-send "Webcam Flip" "Failed to start - webcam might be in use" -t 3000
+        rm "$PIDFILE"
+    fi
+}
+
+# Function to stop the flipped webcam
+stop_flip() {
+    if [ -f "$PIDFILE" ]; then
+        PID=$(cat "$PIDFILE")
+        if kill -0 "$PID" 2>/dev/null; then
+            kill "$PID"
+            rm "$PIDFILE"
+            notify-send "Webcam Flip" "Flipped webcam stopped" -t 2000
+        else
+            rm "$PIDFILE"
+        fi
+    fi
+}
+
+# Toggle logic
+if [ -f "$PIDFILE" ] && kill -0 $(cat "$PIDFILE") 2>/dev/null; then
+    stop_flip
+else
+    stop_flip  # Clean up any stale processes
+    start_flip
+fi
