@@ -11,7 +11,6 @@ opt.cursorline = true
 opt.clipboard:append("unnamedplus")
 opt.ignorecase = true
 opt.smartcase = true
-opt.termguicolors = true
 opt.signcolumn = "yes"
 opt.swapfile = false
 opt.scrolloff = 10
