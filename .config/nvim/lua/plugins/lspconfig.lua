@@ -8,12 +8,12 @@ return {
 	},
 	config = function()
 		-- Disable default LSP keymaps to avoid conflicts
-		vim.keymap.del("n", "grr")
-		vim.keymap.del("n", "gra")
-		vim.keymap.del("x", "gra")
-		vim.keymap.del("n", "grn")
-		vim.keymap.del("n", "gri")
-		vim.keymap.del("n", "grt")
+		pcall(vim.keymap.del, "n", "grr")
+		pcall(vim.keymap.del, "n", "gra")
+		pcall(vim.keymap.del, "x", "gra")
+		pcall(vim.keymap.del, "n", "grn")
+		pcall(vim.keymap.del, "n", "gri")
+		pcall(vim.keymap.del, "n", "grt")
 
 		local capabilities = require("blink.cmp").get_lsp_capabilities()
 
