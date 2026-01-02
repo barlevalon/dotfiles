@@ -14,6 +14,7 @@ return {
 		-- words = { enabled = true },
 		lazygit = {},
 		picker = {
+			ui_select = true, -- Replace vim.ui.select
 			sources = {
 				files = {
 					hidden = true,

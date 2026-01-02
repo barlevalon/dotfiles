@@ -4,6 +4,7 @@ return {
 	dependencies = {
 		"saghen/blink.cmp",
 		"b0o/schemastore.nvim",
+		"williamboman/mason-lspconfig.nvim",
 		{ "antosha417/nvim-lsp-file-operations", config = true },
 	},
 	config = function()
@@ -96,6 +97,19 @@ return {
 		-- Configure specific servers with custom settings
 		-- These will be picked up automatically when servers are enabled
 		local lspconfig = require("lspconfig")
+
+		-- Default setup for Mason servers not manually configured
+		local mason_lspconfig = require("mason-lspconfig")
+		local installed_servers = mason_lspconfig.get_installed_servers()
+
+		for _, server_name in ipairs(installed_servers) do
+			-- Skip manually configured servers
+			if server_name ~= "lua_ls" and server_name ~= "yamlls" and server_name ~= "jsonls" then
+				require("lspconfig")[server_name].setup({
+					capabilities = capabilities,
+				})
+			end
+		end
 
 		-- Configure servers that need special settings
 		lspconfig.lua_ls.setup({
