@@ -1,5 +1,18 @@
 # Initialize keychain for SSH key management
 if status is-interactive
+    set -l keychain_prefix ~/.keychain/(hostname)-
+
+    # Best-effort cleanup of stale agent state.
+    # fish can persist SSH_AUTH_SOCK/SSH_AGENT_PID as universal variables,
+    # so if the socket goes stale it will break every new shell.
+    if test -n "$SSH_AUTH_SOCK"
+        if not test -S "$SSH_AUTH_SOCK"
+            set -e SSH_AUTH_SOCK
+            set -e SSH_AGENT_PID
+            rm -f $keychain_prefix*
+        end
+    end
+
     # Check for stale keychain file (PID reuse after power loss)
     set -l keychain_conf ~/.keychain/(hostname)-fish
     if test -f $keychain_conf
@@ -7,7 +20,9 @@ if status is-interactive
         if test -n "$SSH_AGENT_PID"
             # If process is not running or not ssh-agent, clear stale files
             if not ps -p $SSH_AGENT_PID -o comm= | grep -q ssh-agent
-                rm -f ~/.keychain/(hostname)-*
+                set -e SSH_AUTH_SOCK
+                set -e SSH_AGENT_PID
+                rm -f $keychain_prefix*
             end
         end
     end
