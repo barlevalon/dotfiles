@@ -1,0 +1,6 @@
+text_prefix = "Search web: "
+
+[[entries]]
+default = true
+name = "Search web…"
+url = "https://kagi.com/search?q=%TERM%"
