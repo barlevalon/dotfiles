@@ -104,9 +104,10 @@ return {
 		for _, server_name in ipairs(installed_servers) do
 			-- Skip manually configured servers
 			if server_name ~= "lua_ls" and server_name ~= "yamlls" and server_name ~= "jsonls" then
-				require("lspconfig")[server_name].setup({
+				vim.lsp.config(server_name, {
 					capabilities = capabilities,
 				})
+				vim.lsp.enable(server_name)
 			end
 		end
 
