@@ -11,7 +11,13 @@ if not vim.uv.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup({ { import = "plugins" } }, {
+require("lazy").setup({
+	{ import = "plugins" },
+	-- Omarchy theme files reference LazyVim/LazyVim as a plugin spec to set
+	-- colorscheme opts. Since this config doesn't use LazyVim as a base,
+	-- disable it to prevent installation and the "bad import order" warning.
+	{ "LazyVim/LazyVim", enabled = false },
+}, {
 	install = {
 		colorscheme = { "catppuccin-macchiato" },
 	},
