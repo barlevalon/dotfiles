@@ -97,13 +97,31 @@ return {
 		-- Configure specific servers with custom settings
 		-- These will be picked up automatically when servers are enabled
 
+		-- Configure pyright with workspace path for local imports
+		vim.lsp.config("pyright", {
+			capabilities = capabilities,
+			settings = {
+				python = {
+					analysis = {
+						-- Add workspace root to Python path for local imports
+						extraPaths = { "." },
+						-- Use source code auto-search for imports
+						autoSearchPaths = true,
+						-- Use PYTHONPATH for import resolution
+						useLibraryCodeForTypes = true,
+					},
+				},
+			},
+		})
+		vim.lsp.enable("pyright")
+
 		-- Default setup for Mason servers not manually configured
 		local mason_lspconfig = require("mason-lspconfig")
 		local installed_servers = mason_lspconfig.get_installed_servers()
 
 		for _, server_name in ipairs(installed_servers) do
 			-- Skip manually configured servers
-			if server_name ~= "lua_ls" and server_name ~= "yamlls" and server_name ~= "jsonls" then
+			if server_name ~= "lua_ls" and server_name ~= "yamlls" and server_name ~= "jsonls" and server_name ~= "pyright" then
 				vim.lsp.config(server_name, {
 					capabilities = capabilities,
 				})
