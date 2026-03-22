@@ -18,6 +18,7 @@ opt.smoothscroll = true  -- Smooth scrolling for <C-d>, <C-u>, etc.
 opt.updatetime = 250  -- Faster CursorHold events (default: 4000)
 opt.undofile = true
 opt.hlsearch = true
+opt.autoread = true
 
 vim.g.clipboard = {
 	name = "wl",
@@ -30,6 +31,12 @@ vim.g.clipboard = {
 		["*"] = "wl-paste",
 	},
 }
+
+local autoread = vim.api.nvim_create_augroup("autoread", { clear = true })
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
+	command = "checktime",
+	group = autoread,
+})
 
 local highlight_yank = vim.api.nvim_create_augroup("highlight_yank", { clear = true })
 vim.api.nvim_create_autocmd("TextYankPost", {
