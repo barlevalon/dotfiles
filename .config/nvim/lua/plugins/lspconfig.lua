@@ -96,7 +96,6 @@ return {
 
 		-- Configure specific servers with custom settings
 		-- These will be picked up automatically when servers are enabled
-		local lspconfig = require("lspconfig")
 
 		-- Default setup for Mason servers not manually configured
 		local mason_lspconfig = require("mason-lspconfig")
@@ -105,14 +104,15 @@ return {
 		for _, server_name in ipairs(installed_servers) do
 			-- Skip manually configured servers
 			if server_name ~= "lua_ls" and server_name ~= "yamlls" and server_name ~= "jsonls" then
-				require("lspconfig")[server_name].setup({
+				vim.lsp.config(server_name, {
 					capabilities = capabilities,
 				})
+				vim.lsp.enable(server_name)
 			end
 		end
 
 		-- Configure servers that need special settings
-		lspconfig.lua_ls.setup({
+		vim.lsp.config("lua_ls", {
 			capabilities = capabilities,
 			settings = {
 				Lua = {
@@ -128,8 +128,9 @@ return {
 				},
 			},
 		})
+		vim.lsp.enable("lua_ls")
 
-		lspconfig.yamlls.setup({
+		vim.lsp.config("yamlls", {
 			capabilities = capabilities,
 			settings = {
 				yaml = {
@@ -141,8 +142,9 @@ return {
 				},
 			},
 		})
+		vim.lsp.enable("yamlls")
 
-		lspconfig.jsonls.setup({
+		vim.lsp.config("jsonls", {
 			capabilities = capabilities,
 			settings = {
 				json = {
@@ -151,5 +153,6 @@ return {
 				},
 			},
 		})
+		vim.lsp.enable("jsonls")
 	end,
 }

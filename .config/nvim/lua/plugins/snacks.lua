@@ -12,7 +12,6 @@ return {
 		quickfile = { enabled = true },
 		-- statuscolumn = { enabled = true },
 		-- words = { enabled = true },
-		lazygit = {},
 		picker = {
 			ui_select = true, -- Replace vim.ui.select
 			sources = {

@@ -1,17 +1,74 @@
 return {
 	"nvim-treesitter/nvim-treesitter",
+	lazy = false,
 	build = ":TSUpdate",
 	config = function()
-		require("nvim-treesitter.configs").setup({
-			ensure_installed = {
-				"markdown",
-				"markdown_inline",
-				"hcl",
-				"terraform",
-			},
-			auto_install = true,
-			highlight = { enable = true },
-			indent = { enable = true },
+		-- nvim-treesitter main branch API (Neovim 0.11+)
+		-- Old configs used `configs.setup()` with highlight.enable
+		-- New API: setup() only sets install_dir, highlighting via native vim.treesitter
+		require("nvim-treesitter").setup({
+			install_dir = vim.fn.stdpath("data") .. "/site",
+		})
+
+		local parsers = {
+			-- System languages
+			"c",
+			"rust",
+			"go",
+			"gomod",
+			"gosum",
+			"gowork",
+
+			-- Web/Frontend
+			"javascript",
+			"typescript",
+			"tsx",
+			"html",
+			"css",
+			"scss",
+			"json",
+			"jsdoc",
+
+			-- Scripting/Dynamic
+			"python",
+			"ruby",
+			"lua",
+			"luadoc",
+			"bash",
+			"fish",
+
+			-- Config/DevOps
+			"yaml",
+			"toml",
+			"dockerfile",
+			"terraform",
+			"hcl",
+			"nix",
+			"proto",
+			"sql",
+
+			-- Markup/Data
+			"markdown",
+			"markdown_inline",
+			"xml",
+			"csv",
+			"regex",
+
+			-- Vim internals
+			"vim",
+			"vimdoc",
+			"query",
+		}
+
+		-- Install parsers asynchronously (background)
+		require("nvim-treesitter").install(parsers)
+
+		-- Auto-enable treesitter highlighting for all installed parsers
+		-- Note: vim.treesitter.start() is the native Neovim API
+		local installed = require("nvim-treesitter").get_installed("parsers")
+		vim.api.nvim_create_autocmd("FileType", {
+			pattern = installed,
+			callback = function() vim.treesitter.start() end,
 		})
 	end,
 }

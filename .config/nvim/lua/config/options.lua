@@ -20,14 +20,14 @@ opt.undofile = true
 opt.hlsearch = true
 
 vim.g.clipboard = {
-	name = "pb",
+	name = "wl",
 	copy = {
-		["+"] = "pbcopy",
-		["*"] = "pbcopy",
+		["+"] = "wl-copy",
+		["*"] = "wl-copy",
 	},
 	paste = {
-		["+"] = "pbpaste",
-		["*"] = "pbpaste",
+		["+"] = "wl-paste",
+		["*"] = "wl-paste",
 	},
 }
 

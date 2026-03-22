@@ -57,12 +57,11 @@ return {
 				"stylua", -- lua formatter
 				"isort", -- python formatter
 				"black", -- python formatter
-				"pylint", -- python linter
+				"ruff", -- python linter (replaces pylint)
 				"eslint_d", -- js linter
 				"gofumpt",
 				"goimports",
 				"golangci-lint",
-				"pylint",
 				"tflint",
 			},
 		})
