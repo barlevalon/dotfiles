@@ -16,12 +16,12 @@ map("n", "<leader>sh", "<C-w>s", { desc = "Split window horizontally" }) -- spli
 map("n", "<leader>se", "<C-w>=", { desc = "Make splits equal size" }) -- make split windows equal width & height
 map("n", "<leader>sx", "<cmd>close<CR>", { desc = "Close current split" }) -- close current split window
 
--- tabs
-map("n", "<leader>to", "<cmd>tabnew<CR>", { desc = "Open new tab" }) -- open new tab
-map("n", "<leader>tx", "<cmd>tabclose<CR>", { desc = "Close current tab" }) -- close current tab
-map("n", "<leader>tn", "<cmd>tabn<CR>", { desc = "Go to next tab" }) --  go to next tab
-map("n", "<leader>tp", "<cmd>tabp<CR>", { desc = "Go to previous tab" }) --  go to previous tab
-map("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new tab" }) --  move current buffer to new tab
+	-- tabs
+	map("n", "<leader>wo", "<cmd>tabnew<CR>", { desc = "Open new tab" }) -- open new tab
+	map("n", "<leader>wx", "<cmd>tabclose<CR>", { desc = "Close current tab" }) -- close current tab
+	map("n", "<leader>wn", "<cmd>tabn<CR>", { desc = "Go to next tab" }) --  go to next tab
+	map("n", "<leader>wp", "<cmd>tabp<CR>", { desc = "Go to previous tab" }) --  go to previous tab
+	map("n", "<leader>wf", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new tab" }) --  move current buffer to new tab
 
 -- Navigate panes
 map("n", "<C-h>", "<cmd>wincmd h<CR>", { desc = "Pane left", silent = true })

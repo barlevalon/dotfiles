@@ -20,17 +20,7 @@ opt.undofile = true
 opt.hlsearch = true
 opt.autoread = true
 
-vim.g.clipboard = {
-	name = "wl",
-	copy = {
-		["+"] = "wl-copy",
-		["*"] = "wl-copy",
-	},
-	paste = {
-		["+"] = "wl-paste",
-		["*"] = "wl-paste",
-	},
-}
+vim.g.clipboard = "wl-copy"
 
 local autoread = vim.api.nvim_create_augroup("autoread", { clear = true })
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {

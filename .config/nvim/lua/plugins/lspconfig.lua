@@ -4,7 +4,6 @@ return {
 	dependencies = {
 		"saghen/blink.cmp",
 		"b0o/schemastore.nvim",
-		"williamboman/mason-lspconfig.nvim",
 		{ "antosha417/nvim-lsp-file-operations", config = true },
 	},
 	config = function()
@@ -16,14 +15,17 @@ return {
 		pcall(vim.keymap.del, "n", "gri")
 		pcall(vim.keymap.del, "n", "grt")
 
-		local capabilities = require("blink.cmp").get_lsp_capabilities()
+		-- Set capabilities for all servers (blink.cmp completion)
+		vim.lsp.config("*", {
+			capabilities = require("blink.cmp").get_lsp_capabilities(),
+		})
 
-		-- Configure diagnostic signs (modern approach)
+		-- Configure diagnostic signs
 		local signs = {
-			Error = " ",
-			Warn = " ",
+			Error = " ",
+			Warn = " ",
 			Hint = "󰌵 ",
-			Info = " ",
+			Info = " ",
 		}
 
 		local signConf = {
@@ -84,36 +86,22 @@ return {
 				vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)
 
 				opts.desc = "Prev diagnostic"
-				vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
+				vim.keymap.set("n", "[d", function()
+					vim.diagnostic.jump({ count = -1, float = true })
+				end, opts)
 
 				opts.desc = "Next diagnostic"
-				vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
+				vim.keymap.set("n", "]d", function()
+					vim.diagnostic.jump({ count = 1, float = true })
+				end, opts)
 
 				opts.desc = "Restart LSP"
 				vim.keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts)
 			end,
 		})
 
-		-- Configure specific servers with custom settings
-		-- These will be picked up automatically when servers are enabled
-
-		-- Default setup for Mason servers not manually configured
-		local mason_lspconfig = require("mason-lspconfig")
-		local installed_servers = mason_lspconfig.get_installed_servers()
-
-		for _, server_name in ipairs(installed_servers) do
-			-- Skip manually configured servers
-			if server_name ~= "lua_ls" and server_name ~= "yamlls" and server_name ~= "jsonls" then
-				vim.lsp.config(server_name, {
-					capabilities = capabilities,
-				})
-				vim.lsp.enable(server_name)
-			end
-		end
-
-		-- Configure servers that need special settings
+		-- Custom server settings (automatic_enable handles vim.lsp.enable)
 		vim.lsp.config("lua_ls", {
-			capabilities = capabilities,
 			settings = {
 				Lua = {
 					diagnostics = {
@@ -128,10 +116,8 @@ return {
 				},
 			},
 		})
-		vim.lsp.enable("lua_ls")
 
 		vim.lsp.config("yamlls", {
-			capabilities = capabilities,
 			settings = {
 				yaml = {
 					schemaStore = {
@@ -142,10 +128,8 @@ return {
 				},
 			},
 		})
-		vim.lsp.enable("yamlls")
 
 		vim.lsp.config("jsonls", {
-			capabilities = capabilities,
 			settings = {
 				json = {
 					schemas = require("schemastore").json.schemas(),
@@ -153,6 +137,5 @@ return {
 				},
 			},
 		})
-		vim.lsp.enable("jsonls")
 	end,
 }
