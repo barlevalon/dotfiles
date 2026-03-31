@@ -1,20 +1,8 @@
 return {
-	"williamboman/mason.nvim",
-	dependencies = {
-		"williamboman/mason-lspconfig.nvim",
-		"WhoIsSethDaniel/mason-tool-installer.nvim",
-	},
-	config = function()
-		-- import mason
-		local mason = require("mason")
-
-		-- import mason-lspconfig
-		local mason_lspconfig = require("mason-lspconfig")
-
-		local mason_tool_installer = require("mason-tool-installer")
-
-		-- enable mason and configure icons
-		mason.setup({
+	-- Mason: package manager for LSP servers, formatters, linters
+	{
+		"mason-org/mason.nvim",
+		opts = {
 			ui = {
 				icons = {
 					package_installed = "✓",
@@ -22,10 +10,20 @@ return {
 					package_uninstalled = "✗",
 				},
 			},
-		})
+		},
+		keys = {
+			{ "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" },
+		},
+	},
 
-		mason_lspconfig.setup({
-			-- list of servers for mason to install
+	-- Bridge mason <-> lspconfig: auto-install and auto-enable LSP servers
+	{
+		"mason-org/mason-lspconfig.nvim",
+		dependencies = {
+			"mason-org/mason.nvim",
+			"neovim/nvim-lspconfig",
+		},
+		opts = {
 			ensure_installed = {
 				"ts_ls",
 				"html",
@@ -41,31 +39,31 @@ return {
 				"ansiblels",
 				"bashls",
 				"golangci_lint_ls",
-				"jsonls", -- Added for schemastore support
+				"jsonls",
 			},
-			-- Automatically enable all installed servers (except those we exclude)
 			automatic_enable = {
-				exclude = { "golangci_lint_ls" }
+				exclude = { "golangci_lint_ls" },
 			},
-		})
+		},
+	},
 
-
-
-		mason_tool_installer.setup({
+	-- Auto-install formatters and linters
+	{
+		"WhoIsSethDaniel/mason-tool-installer.nvim",
+		dependencies = { "mason-org/mason.nvim" },
+		opts = {
 			ensure_installed = {
-				"prettier", -- prettier formatter
-				"stylua", -- lua formatter
-				"isort", -- python formatter
-				"black", -- python formatter
-				"ruff", -- python linter (replaces pylint)
-				"eslint_d", -- js linter
+				"prettier",
+				"stylua",
+				"isort",
+				"black",
+				"ruff",
+				"eslint_d",
 				"gofumpt",
 				"goimports",
 				"golangci-lint",
 				"tflint",
 			},
-		})
-
-		vim.keymap.set("n", "<leader>cm", "<cmd>Mason<cr>", { desc = "Mason", silent = true })
-	end,
+		},
+	},
 }
