@@ -14,13 +14,13 @@ opt.smartcase = true
 opt.signcolumn = "yes"
 opt.swapfile = false
 opt.scrolloff = 10
-opt.smoothscroll = true  -- Smooth scrolling for <C-d>, <C-u>, etc.
-opt.updatetime = 250  -- Faster CursorHold events (default: 4000)
+opt.smoothscroll = true -- Smooth scrolling for <C-d>, <C-u>, etc.
+opt.updatetime = 250 -- Faster CursorHold events (default: 4000)
 opt.undofile = true
 opt.hlsearch = true
 opt.autoread = true
 
-vim.g.clipboard = "wl-copy"
+vim.g.clipboard = "pbcopy"
 
 local autoread = vim.api.nvim_create_augroup("autoread", { clear = true })
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
