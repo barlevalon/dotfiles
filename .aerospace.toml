@@ -60,7 +60,7 @@ default-root-container-orientation = 'auto'
 # App launching
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#exec-and-forget
 alt-t = 'exec-and-forget open -a ghostty'
-alt-b = 'exec-and-forget open -a /Applications/Arc.app/Contents/MacOS/Arc'
+alt-b = 'exec-and-forget open -a /Applications/Vivaldi.app/Contents/MacOS/Vivaldi'
 alt-n = 'exec-and-forget open -a /Applications/Obsidian.app/Contents/MacOS/Obsidian'
 alt-c = 'exec-and-forget open -a "/Applications/Proton Mail.app/Contents/MacOS/Proton Mail"'
 
