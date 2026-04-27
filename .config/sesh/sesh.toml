@@ -14,7 +14,7 @@ startup_command = "ssh hearter@mini"
 
 [[session]]
 name = "kielbasa 🎥"
-path = "~/personal/kielbasa/"
+path = "~/repos/barlevalon/kielbasa/"
 startup_command = "ssh k"
 
 [[session]]

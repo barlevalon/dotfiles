@@ -68,8 +68,8 @@ keybindings:
         '
 
 repoPaths:
-  barlevalon/*: ~/personal/*
-  sibp/*: ~/work/*
+  barlevalon/*: ~/repos/barlevalon/*
+  sibp/*: ~/repos/sibp/*
 
 theme:
   ui:

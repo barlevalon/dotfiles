@@ -14,22 +14,19 @@ fi
 
 # Normalize repo format - add github.com if just user/repo
 if [[ "$repo" =~ ^[^/]+/[^/]+$ ]]; then
+  repo_path="$repo"
   repo="https://github.com/$repo"
+elif [[ "$repo" =~ github\.com[:/]([^/]+/[^/]+?)(\.git)?$ ]]; then
+  repo_path="${BASH_REMATCH[1]}"
 fi
 
-# Extract repo name for directory
-repo_name=$(basename "$repo" .git)
-
-# Choose destination
-dest=$(printf "work\npersonal" | fzf \
-  --prompt "Clone to: ~/" \
-  --header "Select destination")
-
-if [[ -z "$dest" ]]; then
-  exit 0
+# Extract repo path for directory
+if [[ -z "${repo_path:-}" ]]; then
+  repo_name=$(basename "$repo" .git)
+  repo_path="$repo_name"
 fi
 
-target_dir="$HOME/$dest/$repo_name"
+target_dir="$HOME/repos/$repo_path"
 
 # Clone if doesn't exist
 if [[ -d "$target_dir" ]]; then
