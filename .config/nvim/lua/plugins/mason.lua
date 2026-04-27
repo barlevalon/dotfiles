@@ -1,3 +1,5 @@
+local servers = require("config.languages").lsp_servers
+
 return {
 	-- Mason: package manager for LSP servers, formatters, linters
 	{
@@ -24,26 +26,8 @@ return {
 			"neovim/nvim-lspconfig",
 		},
 		opts = {
-			ensure_installed = {
-				"ts_ls",
-				"html",
-				"cssls",
-				"tailwindcss",
-				"svelte",
-				"lua_ls",
-				"graphql",
-				"pyright",
-				"gopls",
-				"yamlls",
-				"terraformls",
-				"ansiblels",
-				"bashls",
-				"golangci_lint_ls",
-				"jsonls",
-			},
-			automatic_enable = {
-				exclude = { "golangci_lint_ls" },
-			},
+			ensure_installed = servers,
+			automatic_enable = false,
 		},
 	},
 
