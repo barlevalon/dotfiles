@@ -1,11 +1,13 @@
 [settings]
 idiomatic_version_file_enable_tools = ["ruby", "node"]
 
-[settings.ruby]
-ruby_build_opts = "CC=gcc-14 CXX=g++-14"
-
 [tools]
+android-sdk = "20.0"
+bun = "latest"
+flutter = "3.38.7-stable"
 go = "latest"
+gradle = "9.3.0"
 node = "22"
-python = "latest"
+pnpm = "latest"
+python = "3.11"
 ruby = "latest"
