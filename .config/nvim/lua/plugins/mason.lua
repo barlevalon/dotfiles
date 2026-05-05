@@ -47,6 +47,7 @@ return {
 				"goimports",
 				"golangci-lint",
 				"tflint",
+				"yamllint",
 			},
 		},
 	},
