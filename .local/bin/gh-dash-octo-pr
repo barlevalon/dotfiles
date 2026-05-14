@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ $# -ne 2 ]]; then
+  echo "usage: gh-dash-octo-pr <repo-path> <pr-number>" >&2
+  exit 64
+fi
+
+repo_path=$1
+pr_number=$2
+
+if [[ $repo_path == ~/* ]]; then
+  repo_path="$HOME/${repo_path#~/}"
+fi
+
+execute_cmd="nvim -c ':silent Octo pr edit ${pr_number}'"
+
+if [[ -n ${TMUX:-} ]]; then
+  printf -v wt_cmd '%q ' wt -C "$repo_path" switch "pr:${pr_number}" -x "$execute_cmd"
+  tmux new-window -c "$repo_path" "$wt_cmd"
+else
+  wt -C "$repo_path" switch "pr:${pr_number}" -x "$execute_cmd"
+fi
