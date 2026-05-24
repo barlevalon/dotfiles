@@ -1,1 +1,2 @@
-alias claude="/Users/hearter/.claude/local/claude"
+# Claude CLI alias
+alias claude="$HOME/.claude/local/claude"

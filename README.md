@@ -1,48 +1,86 @@
 # Dotfiles Repository
 
-## Overview
-- Personal dotfiles for macOS system and app configurations
-- Managed as a bare Git repository for direct tracking in `$HOME`
+Personal dotfiles for macOS and Linux/Omarchy, managed as a bare Git repository
+checked directly into `$HOME`.
 
-## Setup & Usage
-This repository uses the bare repo method for dotfile management:
-- Git directory: `~/.dotfiles.git/`
-- Work tree: `$HOME`
-- Fish functions: `dots` (git wrapper), `ldots` (lazygit wrapper)
+## Branch model
 
-### Initial Setup (for new machines)
+Long-lived OS branches are intentional:
+
+- `main` - macOS
+- `omarchy` - Linux/Omarchy
+
+This repo does not use Stow, Chezmoi, or a template/apply layer. The checked-out
+branch decides which files exist in `$HOME`.
+
+Workflow rules:
+
+- Shared changes should be committed as path-pure commits and cherry-picked to
+  the other OS branch.
+- OS-specific changes stay on their OS branch.
+- Avoid mixed commits that touch both shared files and OS-only files.
+- When a file path must differ by OS and the application has no include/fragments
+  mechanism, treat that whole file as OS-specific.
+
+Examples:
+
+- Shared: agent instructions, Fish helpers that do not reference OS paths,
+  Neovim plugin/config structure, Git aliases, cross-platform scripts.
+- macOS-only: AeroSpace, Raycast, Homebrew package lists, macOS clipboard and
+  terminal settings.
+- Linux/Omarchy-only: Hyprland, Waybar, Omarchy theme files, yay package lists,
+  Linux clipboard and systemd user services.
+
+## Setup
+
 ```bash
-git clone --bare https://github.com/barlevalon/dotfiles.git $HOME/.dotfiles.git
-alias dots='git --git-dir=$HOME/.dotfiles.git/ --work-tree=$HOME'
-alias ldots='lazygit --git-dir=$HOME/.dotfiles.git/ --work-tree=$HOME'
-dots checkout [branch]
+git clone --bare git@github.com:barlevalon/dotfiles.git ~/.dotfiles.git
+alias dots='git --git-dir=$HOME/.dotfiles.git --work-tree=$HOME'
+alias ldots='lazygit --git-dir=$HOME/.dotfiles.git --work-tree=$HOME'
+dots checkout <main|omarchy>
 dots config --local status.showUntrackedFiles no
-dots config --local remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
 ```
 
-### Daily Usage
-- `dots status` - Check status of tracked files
-- `dots add <file>` - Track a new config file
-- `dots commit -m "message"` - Commit changes
-- `dots push` - Push to remote
-- `dots pull` - Pull latest changes
-- `ldots` - Open lazygit for visual management
+## Daily commands
 
-## Structure
-Configuration files are organized by application:
-- `aerospace/` - AeroSpace window manager config
-- `nvim/` - Neovim configuration ([detailed config here](nvim/.config/nvim))
-- `fish/` - Fish shell config
-- `tmux/` - Terminal multiplexer config
-- `ghostty/` - Ghostty terminal config
-- `raycast/` - Raycast app config
-- `starship/` - Starship prompt config
-- `.Brewfile` - Homebrew packages list
-- etc.
+- `dots status` - show tracked changes
+- `dots add <file>` - stage a dotfile
+- `dots commit -m "message"` - commit changes
+- `dots push` - push current branch
+- `ldots` - open lazygit for this bare repo
 
-Each directory contains files that will be placed in the appropriate location in `$HOME` (usually under `.config/`).
+## Keeping branches in sync
 
-## Package Management
-- `packages/Brewfile` - Contains all Homebrew packages, casks, and Mac App Store apps
-- `brew bundle` - Install all packages from Brewfile
-- `brew bundle dump` - Update Brewfile with currently installed packages
+For shared changes:
+
+```bash
+# On the branch where the change was made
+dots commit -m "chore(scope): update shared config"
+dots push
+
+# On the other OS branch
+dots cherry-pick <commit>
+dots push
+```
+
+For OS-specific changes, commit only on that OS branch.
+
+## Common paths
+
+- `.agents/` - agent instructions and skills
+- `.config/fish/` - Fish shell config
+- `.config/nvim/` - Neovim config
+- `.config/tmux/` - tmux config
+- `packages/` - OS package manifests/helpers
+
+## Linux/Omarchy paths
+
+- `.config/hypr/` - Hyprland config
+- `.config/waybar/` - Waybar config
+- `.config/omarchy/` and theme files - Omarchy integration
+
+## macOS paths
+
+- `.aerospace.toml` - AeroSpace window manager config
+- Raycast exports/configs
+- Homebrew package manifests

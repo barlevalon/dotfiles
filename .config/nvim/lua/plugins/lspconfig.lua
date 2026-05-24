@@ -1,3 +1,5 @@
+local servers = require("config.languages").lsp_servers
+
 return {
 	"neovim/nvim-lspconfig",
 	event = { "BufReadPre", "BufNewFile" },
@@ -100,7 +102,7 @@ return {
 			end,
 		})
 
-		-- Custom server settings (automatic_enable handles vim.lsp.enable)
+		-- Custom server settings before explicit vim.lsp.enable().
 		vim.lsp.config("lua_ls", {
 			settings = {
 				Lua = {
@@ -137,5 +139,7 @@ return {
 				},
 			},
 		})
+
+		vim.lsp.enable(servers)
 	end,
 }

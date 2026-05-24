@@ -1,2 +1,14 @@
 [mgr]
+sort_by = "mtime"
+sort_reverse = true
+sort_sensitive = false
+sort_translit = true
+sort_dir_first = true
 show_hidden = true
+
+[preview]
+max_width = 1200
+max_height = 900
+
+[tasks]
+image_bound = [ 0, 0 ]
