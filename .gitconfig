@@ -3,7 +3,7 @@
 [commit]
 	gpgsign = true
 [user]
-	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN1kjySs8SndASeQdQlGLrhqb6XzPOBwi88tIaU58EOP
+	signingkey = ~/.ssh/id_ed25519.pub
 	email = barlevalon@users.noreply.github.com
   name = Alon Hearter
 [pull]

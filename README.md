@@ -1,56 +1,86 @@
 # Dotfiles Repository
 
-## Overview
-- Personal dotfiles for system and app configurations
-- Managed as a bare Git repository for direct tracking in `$HOME`
-- Branch structure: `arch` for Arch Linux, `main` for macOS
-- Based on and inspired by github.com/basecamp/omarchy
+Personal dotfiles for macOS and Linux/Omarchy, managed as a bare Git repository
+checked directly into `$HOME`.
 
-## Setup & Usage
-This repository uses the bare repo method for dotfile management:
-- Git directory: `~/.dotfiles.git/`
-- Work tree: `$HOME`
-- Fish functions: `dots` (git wrapper), `ldots` (lazygit wrapper)
+## Branch model
 
-### Commands
-- `dots status` - Check status of tracked files
-- `dots add <file>` - Track a new config file
-- `dots commit -m "message"` - Commit changes
-- `dots push` - Push to remote
-- `ldots` - Open lazygit for visual management
+Long-lived OS branches are intentional:
 
-## Structure
-Configuration files are organized in their standard locations:
-- `.config/hypr/` - Hyprland window manager config
-- `.config/theme/` - Theme system and color schemes
-- `.config/waybar/` - Status bar configuration
-- `.config/tmux/` - Terminal multiplexer config
-- `.config/nvim/` - Neovim configuration
+- `main` - macOS
+- `omarchy` - Linux/Omarchy
+
+This repo does not use Stow, Chezmoi, or a template/apply layer. The checked-out
+branch decides which files exist in `$HOME`.
+
+Workflow rules:
+
+- Shared changes should be committed as path-pure commits and cherry-picked to
+  the other OS branch.
+- OS-specific changes stay on their OS branch.
+- Avoid mixed commits that touch both shared files and OS-only files.
+- When a file path must differ by OS and the application has no include/fragments
+  mechanism, treat that whole file as OS-specific.
+
+Examples:
+
+- Shared: agent instructions, Fish helpers that do not reference OS paths,
+  Neovim plugin/config structure, Git aliases, cross-platform scripts.
+- macOS-only: AeroSpace, Raycast, Homebrew package lists, macOS clipboard and
+  terminal settings.
+- Linux/Omarchy-only: Hyprland, Waybar, Omarchy theme files, yay package lists,
+  Linux clipboard and systemd user services.
+
+## Setup
+
+```bash
+git clone --bare git@github.com:barlevalon/dotfiles.git ~/.dotfiles.git
+alias dots='git --git-dir=$HOME/.dotfiles.git --work-tree=$HOME'
+alias ldots='lazygit --git-dir=$HOME/.dotfiles.git --work-tree=$HOME'
+dots checkout <main|omarchy>
+dots config --local status.showUntrackedFiles no
+```
+
+## Daily commands
+
+- `dots status` - show tracked changes
+- `dots add <file>` - stage a dotfile
+- `dots commit -m "message"` - commit changes
+- `dots push` - push current branch
+- `ldots` - open lazygit for this bare repo
+
+## Keeping branches in sync
+
+For shared changes:
+
+```bash
+# On the branch where the change was made
+dots commit -m "chore(scope): update shared config"
+dots push
+
+# On the other OS branch
+dots cherry-pick <commit>
+dots push
+```
+
+For OS-specific changes, commit only on that OS branch.
+
+## Common paths
+
+- `.agents/` - agent instructions and skills
 - `.config/fish/` - Fish shell config
-- `.local/` - User binaries and data
-- etc.
+- `.config/nvim/` - Neovim config
+- `.config/tmux/` - tmux config
+- `packages/` - OS package manifests/helpers
 
-## Theme System
-The theme system uses [Tinty](https://github.com/tinted-theming/tinty) for managing base16/base24 color schemes across all applications. See `theme/README.md` for detailed documentation.
+## Linux/Omarchy paths
 
-### Quick Usage
-- `theme-set <name>` - Switch theme
-- `SUPER + T` - Theme menu
-- `bg-next` - Cycle backgrounds
-- Available themes: nord, gruvbox, tokyo-night, catppuccin, kanagawa, everforest, rose-pine, matte-black, and more
+- `.config/hypr/` - Hyprland config
+- `.config/waybar/` - Waybar config
+- `.config/omarchy/` and theme files - Omarchy integration
 
+## macOS paths
 
-
-## Key Commands
-- `dots` - Git commands for dotfiles management
-- `ldots` - Lazygit for visual dotfiles management
-- `theme-set <name>` - Switch theme
-- `bg-next` - Cycle through theme backgrounds
-- `SUPER + T` - Theme menu
-- `SUPER + SHIFT + T` - Next background
-
-## Package Management
-- `packages/` directory contains Makefile for saving/restoring installed packages
-- `make save` - Save current package list
-- `make install` - Install packages from list
-- Tracks both official and AUR packages
+- `.aerospace.toml` - AeroSpace window manager config
+- Raycast exports/configs
+- Homebrew package manifests
