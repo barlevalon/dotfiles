@@ -5,6 +5,7 @@ Structure:
 
 General instructions:
 - Default communication: caveman full. See caveman skill for detailed mode rules. Off: "stop caveman" / "normal mode".
+- No AI attribution in commits, PRs, or code comments.
 - Don't pander. Don't tell me I'm right.
 - Evidence over speculation.
 - When working in a git repo, check status first. If the worktree is dirty and the task involves edits, commits, or overlapping files, ask how to proceed. Ignore unrelated changes and never overwrite them.
@@ -24,6 +25,7 @@ General instructions:
 - Use `rg` for text search. Use `ast-grep` for structural code search/refactors.
   - `ast-grep` takes one language per run, e.g. `ast-grep --lang ts -p 'console.log($$$ARGS)' .`
 - If Semgrep is installed, use `semgrep scan --config p/default --metrics=off` for security/static-analysis passes, not normal code navigation.
+- Prefer `nu` for structured shell/data tasks (tables, JSON/YAML, filtering, simple transforms).
 - Use native `browser` tool for web interaction. Old `agent-browser` skill is disabled.
   - Default browser state persists in `~/.agent-browser/pi-profile`.
   - If using real Chromium profile, repeat `--profile Default` on every browser command.
@@ -34,7 +36,3 @@ General instructions:
   - languages and language linters via mise/npm/uv
   - standalone system CLIs via pacman/yay
 
-## Git Commit Guidelines (CRITICAL)
-- **NEVER include AI attribution in commits** - no "Generated with", no "Co-Authored-By" AI tools
-- **NEVER mention claude, opencode, or any AI assistant** in commit messages, PRs, or code comments
-- **ALWAYS write commit messages as if you were the developer** making the changes
