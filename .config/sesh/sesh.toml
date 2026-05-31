@@ -5,15 +5,10 @@ path = "~"
 [[session]]
 name = "alon-pc 🖥️"
 path = "~"
-startup_command = "ssh alon@alon-pc"
+startup_command = "mosh alon@alon-pc -- sesh picker"
 
 [[session]]
 name = "mini"
 path = "~"
-startup_command = "ssh hearter@mini"
-
-[[session]]
-name = "kielbasa 🎥"
-path = "~"
-startup_command = "ssh k"
+startup_command = "mosh hearter@mini -- sesh picker"
 
