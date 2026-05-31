@@ -5,17 +5,12 @@ path = "~"
 [[session]]
 name = "alon-mbp 💻"
 path = "~"
-startup_command = "ssh alonhearter@alon-mbp"
+startup_command = "mosh alonhearter@alon-mbp -- sesh picker"
 
 [[session]]
 name = "mini"
 path = "~"
-startup_command = "ssh hearter@mini"
-
-[[session]]
-name = "kielbasa 🎥"
-path = "~/repos/barlevalon/kielbasa/"
-startup_command = "ssh k"
+startup_command = "mosh hearter@mini -- sesh picker"
 
 [[session]]
 name = "irssi"
