@@ -7,6 +7,7 @@
   "modules-left": ["custom/omarchy", "hyprland/workspaces"],
   "modules-center": ["clock", "custom/update", "custom/voxtype", "custom/screenrecording-indicator", "custom/idle-indicator", "custom/notification-silencing-indicator"],
   "modules-right": [
+    "custom/nowplaying",
     "tray",
     "bluetooth",
     "network",
@@ -52,6 +53,15 @@
     "tooltip-format": "Omarchy update available",
     "signal": 7,
     "interval": 21600
+  },
+  "custom/nowplaying": {
+    "exec": "~/.config/waybar/scripts/nowplaying.sh",
+    "return-type": "json",
+    "interval": 3,
+    "tooltip": true,
+    "on-click": "playerctl play-pause",
+    "on-click-right": "playerctl next",
+    "on-click-middle": "playerctl previous"
   },
 
   "cpu": {

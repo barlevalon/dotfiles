@@ -64,6 +64,19 @@ tooltip {
   margin-left: 5px;
 }
 
+#custom-nowplaying {
+  margin-left: 12px;
+  margin-right: 24px;
+}
+
+#custom-nowplaying.empty {
+  margin: 0;
+}
+
+#custom-nowplaying.paused {
+  opacity: 0.65;
+}
+
 .hidden {
   opacity: 0;
 }
