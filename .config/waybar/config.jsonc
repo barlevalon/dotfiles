@@ -72,6 +72,7 @@
   "clock": {
     "format": "{:L%d.%m %A %H:%M}",
     "tooltip": false,
+    "on-click": "omarchy-launch-or-focus-webapp \"vivaldi-calendar\" \"https://app.fastmail.com/calendar\"",
     "on-click-right": "omarchy-launch-floating-terminal-with-presentation omarchy-tz-select"
   },
   "custom/weather": {
