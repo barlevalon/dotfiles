@@ -33,11 +33,17 @@
 #cpu,
 #battery,
 #pulseaudio,
+#language,
 #custom-omarchy,
 
 #custom-update {
   min-width: 12px;
   margin: 0 7.5px;
+}
+
+#language {
+  margin-left: 7.5px;
+  margin-right: 31.5px;
 }
 
 #tray {
